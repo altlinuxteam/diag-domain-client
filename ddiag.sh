@@ -9,21 +9,21 @@ verbose=1
 
 msg_fail()
 {
-    echo -n $*:" ["
+    echo -n " \ $*: ["
     color_text "FAIL" red
     echo "]"
 }
 
 msg_warn()
 {
-    echo -n $*:" ["
+    echo -n " \ $*: ["
     color_text "WARN" yellow
     echo "]"
 }
 
 msg_done()
 {
-    echo -n $*:" ["
+    echo -n " \ $*: ["
     color_text "DONE" green
     echo "]"
 }
@@ -51,21 +51,22 @@ run()
 {
     local retval=126
     local func="$1"
+    local msg=$(printf "/--- %-70s ---" "$func")
 
     if test -z $verbose; then
         $func >/dev/null 2>&1 && retval=0 || retval=$?
     else
-        echo "--- $func ---"
+        color_message "$msg" bold white
         $func && retval=0 || retval=$?
     fi
 
-    test -z $verbose || echo ---
+    test -z $verbose || echo "\------------------------------------------------------------------------------"
     case "$retval" in
         0) msg_done  "$2" ;;
         2) msg_warn  "$2" ;;
         *) msg_fail "$2" ;;
     esac
-    test -z $verbose || echo ---
+    test -z $verbose || color_message "  \----------------------------------------------------------------------------" bold white
     test -z $verbose || echo
 }
 
@@ -89,13 +90,20 @@ check_system_auth()
     echo "control system_auth: $auth"
     readlink -f /etc/pam.d/system-auth
     cat /etc/pam.d/system-auth
+    SYSTEM_AUTH="$auth"
     test -n "$auth" -a "$auth" != "unknown"
 }
 
 test_domain_system_auth()
 {
-    local auth=$(/usr/sbin/control system-auth)
-    test -n "$auth" -a "$auth" != "local" || return 2
+    test -n "$SYSTEM_AUTH" ||
+        SYSTEM_AUTH=local
+    test "$SYSTEM_AUTH" != "local" || return 2
+}
+
+is_system_auth_local()
+{
+    test "$SYSTEM_AUTH" = "local"
 }
 
 check_krb5_conf_ccache()
@@ -131,21 +139,29 @@ check_krb5_conf_kdc_lookup()
 
 check_krb5_keytab_exists()
 {
+    local retval=0
     ls -la /etc/krb5.keytab
-    test -e /etc/krb5.keytab
+    if ! test -e /etc/krb5.keytab; then
+        is_system_auth_local && retval=2 || retval=1
+    fi
+    return $retval
 }
 
 check_keytab_credential_list()
 {
-    run_by_root klist -ke
+    local retval=0
+    if ! run_by_root klist -ke; then
+        is_system_auth_local && retval=2 || retval=1
+    fi
+    return $retval
 }
 
-run check_hostnamectl "Check hostnamectl"
-run test_hostname "Test hostname is FQDN"
-run check_system_auth "System authentication"
-run test_domain_system_auth "Domain system authentication"
-run check_krb5_conf_ccache "Kerberos credential cache"
-run test_keyring_krb5_conf_ccache "Keyring as kerberos credential cache"
-run check_krb5_conf_kdc_lookup "Check DNS lookup kerberos KDC"
+run check_hostnamectl "Check hostname persistance"
+run test_hostname "Test hostname is FQDN (not short)"
+run check_system_auth "System authentication method"
+run test_domain_system_auth "Domain system authentication enabled"
+run check_krb5_conf_ccache "Kerberos credential cache status"
+run test_keyring_krb5_conf_ccache "Using keyring as kerberos credential cache"
+run check_krb5_conf_kdc_lookup "Check DNS lookup kerberos KDC status"
 run check_krb5_keytab_exists "Check machine crendetial cache is exists"
-run check_keytab_credential_list "Check keytab credential list"
+run check_keytab_credential_list "Check machine credentials list in keytab"
