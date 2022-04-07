@@ -85,6 +85,13 @@ check_system_auth()
     test -n "$auth" -a "$auth" != "unknown"
 }
 
+test_domain_system_auth()
+{
+    local auth=$(/usr/sbin/control system-auth)
+    test -n "$auth" -a "$auth" != "local"
+}
+
 run check_hostnamectl "Check hostnamectl"
 run test_hostname "Test hostname is FQDN"
 run check_system_auth "System authentication"
+run test_domain_system_auth "Domain system authentication"
