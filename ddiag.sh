@@ -39,9 +39,9 @@ run()
     else
         echo "--- $func ---"
         $func
-    fi && msg_done "$2" || $msg_error "$2"
-    echo ---
-    echo
+    fi && (test -z $verbose || echo ---; msg_done "$2") || (test -z $verbose || echo ---; $msg_error "$2")
+    test -z $verbose || echo ---
+    test -z $verbose || echo
 }
 
 check_hostnamectl()
