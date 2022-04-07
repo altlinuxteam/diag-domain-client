@@ -28,6 +28,24 @@ msg_done()
     echo "]"
 }
 
+run_by_root()
+{
+    local msg=
+    if test "$1" = '-m'; then
+        shift
+        msg="$1"
+        shift
+    fi
+    if test `id -u` != 0; then
+        echo -n "Running not by root, SKIP: "
+        echo $*
+    else
+        test -z "$msg" ||
+            echo -n "$msg: "
+        $*
+    fi
+}
+
 run()
 {
     local func="$1"
@@ -58,5 +76,15 @@ test_hostname()
     test "$host" != "${host/.}"
 }
 
+check_system_auth()
+{
+    local auth=$(/usr/sbin/control system-auth)
+    echo "control system_auth: $auth"
+    readlink -f /etc/pam.d/system-auth
+    cat /etc/pam.d/system-auth
+    test -n "$auth" -a "$auth" != "unknown"
+}
+
 run check_hostnamectl "Check hostnamectl"
 run test_hostname "Test hostname is FQDN"
+run check_system_auth "System authentication"
