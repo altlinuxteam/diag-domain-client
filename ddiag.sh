@@ -39,25 +39,32 @@ run_by_root()
     if test `id -u` != 0; then
         echo -n "Running not by root, SKIP: "
         echo $*
+        return 2
     else
         test -z "$msg" ||
             echo -n "$msg: "
-        $*
+        $* || return 1
     fi
 }
 
 run()
 {
+    local retval=126
     local func="$1"
-    local msg_error=msg_fail
-    [ "${func#test_}" = "$func" ] ||
-        msg_error=msg_warn
+
     if test -z $verbose; then
-        $func >/dev/null 2>&1
+        $func >/dev/null 2>&1 && retval=0 || retval=$?
     else
         echo "--- $func ---"
-        $func
-    fi && (test -z $verbose || echo ---; msg_done "$2") || (test -z $verbose || echo ---; $msg_error "$2")
+        $func && retval=0 || retval=$?
+    fi
+
+    test -z $verbose || echo ---
+    case "$retval" in
+        0) msg_done  "$2" ;;
+        2) msg_warn  "$2" ;;
+        *) msg_fail "$2" ;;
+    esac
     test -z $verbose || echo ---
     test -z $verbose || echo
 }
@@ -73,7 +80,7 @@ check_hostnamectl()
 test_hostname()
 {
     local host=`hostname`
-    test "$host" != "${host/.}"
+    test "$host" != "${host/.}" || return 2
 }
 
 check_system_auth()
@@ -88,7 +95,7 @@ check_system_auth()
 test_domain_system_auth()
 {
     local auth=$(/usr/sbin/control system-auth)
-    test -n "$auth" -a "$auth" != "local"
+    test -n "$auth" -a "$auth" != "local" || return 2
 }
 
 check_krb5_conf_ccache()
@@ -101,7 +108,7 @@ check_krb5_conf_ccache()
 test_keyring_krb5_conf_ccache()
 {
     local ccache=$(/usr/sbin/control krb5-conf-ccache)
-    test -n "$ccache" -a "$ccache" == "keyring"
+    test -n "$ccache" -a "$ccache" == "keyring" || return 2
 }
 
 check_krb5_conf_kdc_lookup()
@@ -116,6 +123,7 @@ check_krb5_conf_kdc_lookup()
             retval=1
         else
             echo "is enabled by default"
+            retval=2
         fi
     fi
     return $retval
@@ -127,6 +135,11 @@ check_krb5_keytab_exists()
     test -e /etc/krb5.keytab
 }
 
+check_keytab_credential_list()
+{
+    run_by_root klist -ke
+}
+
 run check_hostnamectl "Check hostnamectl"
 run test_hostname "Test hostname is FQDN"
 run check_system_auth "System authentication"
@@ -134,4 +147,5 @@ run test_domain_system_auth "Domain system authentication"
 run check_krb5_conf_ccache "Kerberos credential cache"
 run test_keyring_krb5_conf_ccache "Keyring as kerberos credential cache"
 run check_krb5_conf_kdc_lookup "Check DNS lookup kerberos KDC"
-run check_krb5_keytab_exists "Check machine crendetial cache"
+run check_krb5_keytab_exists "Check machine crendetial cache is exists"
+run check_keytab_credential_list "Check keytab credential list"
