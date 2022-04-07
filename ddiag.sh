@@ -91,7 +91,22 @@ test_domain_system_auth()
     test -n "$auth" -a "$auth" != "local"
 }
 
+check_krb5_conf_ccache()
+{
+    local ccache=$(/usr/sbin/control krb5-conf-ccache)
+    echo "control krb5-conf-ccache: $ccache"
+    test -n "$ccache" -a "$ccache" != "unknown"
+}
+
+test_keyring_krb5_conf_ccache()
+{
+    local ccache=$(/usr/sbin/control krb5-conf-ccache)
+    test -n "$ccache" -a "$ccache" == "keyring"
+}
+
 run check_hostnamectl "Check hostnamectl"
 run test_hostname "Test hostname is FQDN"
 run check_system_auth "System authentication"
 run test_domain_system_auth "Domain system authentication"
+run check_krb5_conf_ccache "Kerberos credential cache"
+run test_keyring_krb5_conf_ccache "Keyring as kerberos credential cache"
