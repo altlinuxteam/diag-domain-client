@@ -121,6 +121,12 @@ check_krb5_conf_kdc_lookup()
     return $retval
 }
 
+check_krb5_keytab_exists()
+{
+    ls -la /etc/krb5.keytab
+    test -e /etc/krb5.keytab
+}
+
 run check_hostnamectl "Check hostnamectl"
 run test_hostname "Test hostname is FQDN"
 run check_system_auth "System authentication"
@@ -128,3 +134,4 @@ run test_domain_system_auth "Domain system authentication"
 run check_krb5_conf_ccache "Kerberos credential cache"
 run test_keyring_krb5_conf_ccache "Keyring as kerberos credential cache"
 run check_krb5_conf_kdc_lookup "Check DNS lookup kerberos KDC"
+run check_krb5_keytab_exists "Check machine crendetial cache"
