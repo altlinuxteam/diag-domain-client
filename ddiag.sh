@@ -28,6 +28,13 @@ msg_done()
     echo "]"
 }
 
+_command()
+{
+    color_message "\$ $*" bold
+    $*
+    echo
+}
+
 run_by_root()
 {
     local msg=
@@ -43,7 +50,7 @@ run_by_root()
     else
         test -z "$msg" ||
             echo -n "$msg: "
-        $* || return 1
+        _command $* || return 1
     fi
 }
 
@@ -53,6 +60,7 @@ run()
     local func="$1"
     local msg=$(printf "/======             %-52s ======" "$func")
 
+    test -z $verbose || echo " /============================================================================="
     if test -z $verbose; then
         $func >/dev/null 2>&1 && retval=0 || retval=$?
     else
@@ -74,7 +82,7 @@ check_hostnamectl()
 {
     local static_host="$(hostnamectl --static)"
     local transient_host="$(hostname)"
-    hostnamectl
+    _command hostnamectl
     test "$static_host" = "$transient_host"
 }
 
@@ -88,9 +96,9 @@ check_system_auth()
 {
     local auth=$(/usr/sbin/control system-auth)
     echo "control system_auth: $auth"
-    readlink -f /etc/pam.d/system-auth
+    _command readlink -f /etc/pam.d/system-auth
     echo -------------------------------------------------------------------------------
-    cat /etc/pam.d/system-auth
+    _command cat /etc/pam.d/system-auth
     echo -------------------------------------------------------------------------------
     SYSTEM_AUTH="$auth"
     test -n "$auth" -a "$auth" != "unknown"
@@ -111,13 +119,13 @@ is_system_auth_local()
 check_krb5_conf_exists()
 {
     local retval=0
-    ls -l /etc/krb5.conf
+    _command ls -l /etc/krb5.conf
     KRB5_DEFAULT_REALM=
     if ! test -e /etc/krb5.conf; then
         is_system_auth_local && retval=2 || retval=1
     else
         echo -------------------------------------------------------------------------------
-        cat /etc/krb5.conf
+        _command cat /etc/krb5.conf
         echo -------------------------------------------------------------------------------
         KRB5_DEFAULT_REALM=$(grep "^\s*default_realm\s\+" /etc/krb5.conf | sed -e 's/^\s*default_realm\s*=\s*//' -e 's/\s*$//')
     fi
@@ -158,7 +166,7 @@ check_krb5_conf_kdc_lookup()
 check_krb5_keytab_exists()
 {
     local retval=0
-    ls -l /etc/krb5.keytab
+    _command ls -l /etc/krb5.keytab
     if ! test -e /etc/krb5.keytab; then
         is_system_auth_local && retval=2 || retval=1
     fi
@@ -207,8 +215,8 @@ compare_resolv_conf_with_default_realm()
 _check_nameserver()
 {
     local ns="$1"
-    if ping -c 2 -i2 "$ns"; then
-        test -z "$DOMAIN_DOMAIN" || host "$DOMAIN_DOMAIN" "$ns"
+    if _command ping -c 2 -i2 "$ns"; then
+        test -z "$DOMAIN_DOMAIN" || _command host "$DOMAIN_DOMAIN" "$ns"
     fi
 }
 
