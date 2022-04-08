@@ -89,7 +89,9 @@ check_system_auth()
     local auth=$(/usr/sbin/control system-auth)
     echo "control system_auth: $auth"
     readlink -f /etc/pam.d/system-auth
+    echo ===============================================================================
     cat /etc/pam.d/system-auth
+    echo ===============================================================================
     SYSTEM_AUTH="$auth"
     test -n "$auth" -a "$auth" != "unknown"
 }
@@ -104,6 +106,22 @@ test_domain_system_auth()
 is_system_auth_local()
 {
     test "$SYSTEM_AUTH" = "local"
+}
+
+check_krb5_conf_exists()
+{
+    local retval=0
+    ls -l /etc/krb5.conf
+    KRB5_DEFAULT_REALM=
+    if ! test -e /etc/krb5.conf; then
+        is_system_auth_local && retval=2 || retval=1
+    else
+        echo ===============================================================================
+        cat /etc/krb5.conf
+        echo ===============================================================================
+        KRB5_DEFAULT_REALM=$(grep "^\s*default_realm\s\+" /etc/krb5.conf | sed -e 's/^\s*default_realm\s*=\s*//' -e 's/\s*$//')
+    fi
+    return $retval
 }
 
 check_krb5_conf_ccache()
@@ -140,7 +158,7 @@ check_krb5_conf_kdc_lookup()
 check_krb5_keytab_exists()
 {
     local retval=0
-    ls -la /etc/krb5.keytab
+    ls -l /etc/krb5.keytab
     if ! test -e /etc/krb5.keytab; then
         is_system_auth_local && retval=2 || retval=1
     fi
@@ -156,12 +174,77 @@ check_keytab_credential_list()
     return $retval
 }
 
+check_resolv_conf()
+{
+    local retval=0
+    ls -l /etc/resolv.conf
+    echo ===============================================================================
+    cat /etc/resolv.conf
+    echo ===============================================================================
+    SEARCH_DOMAIN=$(grep "^search\s\+" /etc/resolv.conf | sed -e 's/^search\s\+//' -e 's/\s/\n/' | head -1)
+    NAMESERVER1=$(grep "^nameserver\s\+" /etc/resolv.conf | sed -e 's/^nameserver\s\+//' -e 's/\s/\n/' | head -1)
+    NAMESERVER2=$(grep "^nameserver\s\+" /etc/resolv.conf | sed -e 's/^nameserver\s\+//' -e 's/\s/\n/' | head -2 | tail -1)
+    NAMESERVER3=$(grep "^nameserver\s\+" /etc/resolv.conf | sed -e 's/^nameserver\s\+//' -e 's/\s/\n/' | head -3 | tail -1)
+}
+
+compare_resolv_conf_with_default_realm()
+{
+    echo "SEARCH_DOMAIN = '$SEARCH_DOMAIN'"
+    echo "KRB5_DEFAULT_REALM = '$KRB5_DEFAULT_REALM'"
+    local domain=$(echo "$SEARCH_DOMAIN" | tr '[:upper:]' '[:lower:]')
+    local realm=$(echo "$KRB5_DEFAULT_REALM" | tr '[:upper:]' '[:lower:]')
+
+    DOMAIN_DOMAIN="$domain"
+    if test -n "$realm"; then
+        DOMAIN_DOMAIN="$realm"
+    else
+        return 2
+    fi
+    test -n "$domain" || return 2
+    test "$domain" = "$realm" || return 2
+}
+
+_check_nameserver()
+{
+    local ns="$1"
+    if ping -c 2 -i2 "$ns"; then
+        test -z "$DOMAIN_DOMAIN" || host "$DOMAIN_DOMAIN" "$ns"
+    fi
+}
+
+check_nameservers()
+{
+    retval1=0
+    retval2=0
+    retval3=0
+    if [ -n "$NAMESERVER1" ]; then
+        _check_nameserver "$NAMESERVER1" || retval1=1
+    fi
+    if [ -n "$NAMESERVER2" ]; then
+        _check_nameserver "$NAMESERVER2" || retval2=1
+    fi
+    if [ -n "$NAMESERVER3" ]; then
+        _check_nameserver "$NAMESERVER3" || retval3=1
+    fi
+    if test "$retval1" = 0 -a "$retval2" = 0 -a "$retval3" = 0; then
+        return 0;
+    fi
+    if test "$retval1" = 1 -a "$retval2" = 1 -a "$retval3" = 1; then
+        return 1;
+    fi
+    return 2
+}
+
 run check_hostnamectl "Check hostname persistance"
 run test_hostname "Test hostname is FQDN (not short)"
 run check_system_auth "System authentication method"
 run test_domain_system_auth "Domain system authentication enabled"
+run check_krb5_conf_exists "Check Kerberos configuration exists"
 run check_krb5_conf_ccache "Kerberos credential cache status"
 run test_keyring_krb5_conf_ccache "Using keyring as kerberos credential cache"
 run check_krb5_conf_kdc_lookup "Check DNS lookup kerberos KDC status"
 run check_krb5_keytab_exists "Check machine crendetial cache is exists"
 run check_keytab_credential_list "Check machine credentials list in keytab"
+run check_resolv_conf "Check nameserver resolver configuration"
+run compare_resolv_conf_with_default_realm "Compare krb5 realm and first search domain"
+run check_nameservers "Check nameservers availability"
