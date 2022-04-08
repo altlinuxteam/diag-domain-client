@@ -220,6 +220,48 @@ compare_resolv_conf_with_default_realm()
     test "$domain" = "$realm" || return 2
 }
 
+check_smb_conf()
+{
+    local retval=0
+    _command ls -l /etc/samba/smb.conf
+    _command -x grep -v -e '^\s*[#;]' -e '^\s*$' /etc/samba/smb.conf
+    _command -x testparm -s
+    SMB_REALM=$(testparm -v -s 2>/dev/null | grep "^\s*realm\s*=" | sed -e 's/^\s*realm\s*=\s*//' -e 's/\s*$//')
+    SMB_NETBIOS_NAME=$(testparm -v -s 2>/dev/null | grep "^\s*netbios name\s*=" | sed -e 's/^\s*netbios name\s*=\s*//' -e 's/\s*$//')
+}
+
+compare_smb_realm_with_krb5_default_realm()
+{
+    echo "SMB_REALM = '$SMB_REALM'"
+    echo "KRB5_DEFAULT_REALM = '$KRB5_DEFAULT_REALM'"
+
+    test -n "$SMB_REALM" || return 2
+    test -n "$KRB5_DEFAULT_REALM" || return 2
+    test "$KRB5_DEFAULT_REALM" = "$SMB_REALM" || return 2
+}
+
+test_smb_realm()
+{
+    local retval=0
+
+    DOMAIN_REALM="$KRB5_DEFAULT_REALM"
+    if test -n "$SMB_REALM"; then
+        DOMAIN_REALM="$SMB_REALM"
+        DOMAIN_DOMAIN="$(echo "$SMB_REALM" | tr '[:upper:]' '[:lower:]')"
+    else
+        test -z "$DOMAIN_REALM" ||
+            DOMAIN_DOMAIN="$(echo "$DOMAIN_REALM" | tr '[:upper:]' '[:lower:]')"
+        test -n "$DOMAIN_REALM" ||
+            DOMAIN_REALM="$(echo "$DOMAIN_DOMAIN" | tr '[:lower:]' '[:upper:]')"
+        is_system_auth_local && retval=2 || retval=1
+    fi
+
+    echo "DOMAIN_REALM = '$DOMAIN_REALM'"
+    echo "DOMAIN_DOMAIN = '$DOMAIN_DOMAIN'"
+
+    return $retval
+}
+
 _check_nameserver()
 {
     local ns="$1"
@@ -265,4 +307,7 @@ run check_krb5_keytab_exists "Check machine crendetial cache is exists"
 run check_keytab_credential_list "Check machine credentials list in keytab"
 run check_resolv_conf "Check nameserver resolver configuration"
 run compare_resolv_conf_with_default_realm "Compare krb5 realm and first search domain"
+run check_smb_conf "Check Samba configuration"
+run compare_smb_realm_with_krb5_default_realm "Compare samba and krb5 realms"
+run test_smb_realm "Check Samba domain realm"
 run check_nameservers "Check nameservers availability"
