@@ -342,6 +342,38 @@ compare_netbios_name()
     test "$netbios" = "$host" || return 1
 }
 
+check_common_packages()
+{
+    local retval=0
+    _command rpm -q alterator-auth || retval=1
+    _command rpm -q libnss-role || retval=1
+    _command rpm -q libkrb5 || retval=1
+    _command rpm -q libsmbclient || retval=1
+    return $retval
+}
+
+check_group_policy_packages()
+{
+    local retval=0
+    _command rpm -q local-policy || retval=1
+    _command rpm -q gpupdate || retval=1
+    return $retval
+}
+
+check_sssd_ad_packages()
+{
+    local retval=0
+    _command rpm -q task-auth-ad-sssd || retval=1
+    return $retval
+}
+
+check_sssd_winbind_packages()
+{
+    local retval=0
+    _command rpm -q task-auth-ad-winbind || retval=1
+    return $retval
+}
+
 run check_hostnamectl "Check hostname persistance"
 run test_hostname "Test hostname is FQDN (not short)"
 run check_system_auth "System authentication method"
@@ -361,3 +393,7 @@ run test_domainname "Check hostname FQDN domainname"
 run check_nameservers "Check nameservers availability"
 run check_kerberos_and_ldap_srv_records "Check Kerberos and LDAP SRV-records"
 run compare_netbios_name "Compare NetBIOS name and hostname"
+run check_common_packages "Check common packages"
+run check_group_policy_packages "Check group policy packages"
+run check_sssd_ad_packages "Check SSSD AD packages"
+run check_sssd_winbind_packages "Check SSSD Winbind packages"
