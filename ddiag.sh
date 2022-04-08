@@ -31,8 +31,15 @@ msg_done()
 _command()
 {
     local retval=0
+    local x=
+    if test "$1" = '-x'; then
+        shift
+        x=1
+    fi
     color_message "\$ $*" bold
+    test -z "$x" || echo -------------------------------------------------------------------------------
     $* || retval=$?
+    test -z "$x" || echo -------------------------------------------------------------------------------
     echo
     return $retval
 }
@@ -99,9 +106,7 @@ check_system_auth()
     local auth=$(/usr/sbin/control system-auth)
     echo "control system_auth: $auth"
     _command readlink -f /etc/pam.d/system-auth
-    echo -------------------------------------------------------------------------------
-    _command cat /etc/pam.d/system-auth
-    echo -------------------------------------------------------------------------------
+    _command -x cat /etc/pam.d/system-auth
     SYSTEM_AUTH="$auth"
     test -n "$auth" -a "$auth" != "unknown"
 }
@@ -126,9 +131,7 @@ check_krb5_conf_exists()
     if ! test -e /etc/krb5.conf; then
         is_system_auth_local && retval=2 || retval=1
     else
-        echo -------------------------------------------------------------------------------
-        _command cat /etc/krb5.conf
-        echo -------------------------------------------------------------------------------
+        _command -x cat /etc/krb5.conf
         KRB5_DEFAULT_REALM=$(grep "^\s*default_realm\s\+" /etc/krb5.conf | sed -e 's/^\s*default_realm\s*=\s*//' -e 's/\s*$//')
     fi
     return $retval
@@ -187,10 +190,8 @@ check_keytab_credential_list()
 check_resolv_conf()
 {
     local retval=0
-    ls -l /etc/resolv.conf
-    echo -------------------------------------------------------------------------------
-    cat /etc/resolv.conf
-    echo -------------------------------------------------------------------------------
+    _command ls -l /etc/resolv.conf
+    _command -x cat /etc/resolv.conf
     SEARCH_DOMAIN=$(grep "^search\s\+" /etc/resolv.conf | sed -e 's/^search\s\+//' -e 's/\s/\n/' | head -1)
     NAMESERVER1=$(grep "^nameserver\s\+" /etc/resolv.conf | sed -e 's/^nameserver\s\+//' -e 's/\s/\n/' | head -1)
     NAMESERVER2=$(grep "^nameserver\s\+" /etc/resolv.conf | sed -e 's/^nameserver\s\+//' -e 's/\s/\n/' | head -2 | tail -1)
