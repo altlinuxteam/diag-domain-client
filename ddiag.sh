@@ -295,6 +295,13 @@ check_nameservers()
     return 2
 }
 
+check_kerberos_and_ldap_srv_records()
+{
+    test -n "$DOMAIN_DOMAIN" || return 1
+    _command host -t srv "_kerberos._udp.$DOMAIN_DOMAIN"
+    _command host -t srv "_ldap._tcp.$DOMAIN_DOMAIN"
+}
+
 run check_hostnamectl "Check hostname persistance"
 run test_hostname "Test hostname is FQDN (not short)"
 run check_system_auth "System authentication method"
@@ -311,3 +318,4 @@ run check_smb_conf "Check Samba configuration"
 run compare_smb_realm_with_krb5_default_realm "Compare samba and krb5 realms"
 run test_smb_realm "Check Samba domain realm"
 run check_nameservers "Check nameservers availability"
+run check_kerberos_and_ldap_srv_records "Check Kerberos and LDAP SRV-records"
