@@ -32,11 +32,16 @@ _command()
 {
     local retval=0
     local x=
+    local p='$'
     if test "$1" = '-x'; then
         shift
         x=1
     fi
-    color_message "\$ $*" bold
+    if test "$1" = '-r'; then
+        shift
+        p='#'
+    fi
+    color_message "$p $*" bold
     test -z "$x" || echo -------------------------------------------------------------------------------
     $* || retval=$?
     test -z "$x" || echo -------------------------------------------------------------------------------
@@ -59,7 +64,7 @@ run_by_root()
     else
         test -z "$msg" ||
             echo -n "$msg: "
-        _command $* || return 1
+        _command -r $* || return 1
     fi
 }
 
