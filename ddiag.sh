@@ -51,7 +51,7 @@ run()
 {
     local retval=126
     local func="$1"
-    local msg=$(printf "/--- %-70s ---" "$func")
+    local msg=$(printf "/======             %-52s ======" "$func")
 
     if test -z $verbose; then
         $func >/dev/null 2>&1 && retval=0 || retval=$?
@@ -60,13 +60,13 @@ run()
         $func && retval=0 || retval=$?
     fi
 
-    test -z $verbose || echo "\------------------------------------------------------------------------------"
+    test -z $verbose || echo "\=============================================================================="
     case "$retval" in
         0) msg_done  "$2" ;;
         2) msg_warn  "$2" ;;
         *) msg_fail "$2" ;;
     esac
-    test -z $verbose || color_message "  \----------------------------------------------------------------------------" bold white
+    test -z $verbose || color_message "  \============================================================================" bold white
     test -z $verbose || echo
 }
 
@@ -89,9 +89,9 @@ check_system_auth()
     local auth=$(/usr/sbin/control system-auth)
     echo "control system_auth: $auth"
     readlink -f /etc/pam.d/system-auth
-    echo ===============================================================================
+    echo -------------------------------------------------------------------------------
     cat /etc/pam.d/system-auth
-    echo ===============================================================================
+    echo -------------------------------------------------------------------------------
     SYSTEM_AUTH="$auth"
     test -n "$auth" -a "$auth" != "unknown"
 }
@@ -116,9 +116,9 @@ check_krb5_conf_exists()
     if ! test -e /etc/krb5.conf; then
         is_system_auth_local && retval=2 || retval=1
     else
-        echo ===============================================================================
+        echo -------------------------------------------------------------------------------
         cat /etc/krb5.conf
-        echo ===============================================================================
+        echo -------------------------------------------------------------------------------
         KRB5_DEFAULT_REALM=$(grep "^\s*default_realm\s\+" /etc/krb5.conf | sed -e 's/^\s*default_realm\s*=\s*//' -e 's/\s*$//')
     fi
     return $retval
@@ -178,9 +178,9 @@ check_resolv_conf()
 {
     local retval=0
     ls -l /etc/resolv.conf
-    echo ===============================================================================
+    echo -------------------------------------------------------------------------------
     cat /etc/resolv.conf
-    echo ===============================================================================
+    echo -------------------------------------------------------------------------------
     SEARCH_DOMAIN=$(grep "^search\s\+" /etc/resolv.conf | sed -e 's/^search\s\+//' -e 's/\s/\n/' | head -1)
     NAMESERVER1=$(grep "^nameserver\s\+" /etc/resolv.conf | sed -e 's/^nameserver\s\+//' -e 's/\s/\n/' | head -1)
     NAMESERVER2=$(grep "^nameserver\s\+" /etc/resolv.conf | sed -e 's/^nameserver\s\+//' -e 's/\s/\n/' | head -2 | tail -1)
