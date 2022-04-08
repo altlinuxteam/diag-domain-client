@@ -94,10 +94,12 @@ run()
 
 check_hostnamectl()
 {
-    local static_host="$(hostnamectl --static)"
-    local transient_host="$(hostname)"
-    _command hostnamectl
-    test "$static_host" = "$transient_host"
+    local retval=0
+    local static_host="$(hostnamectl --static)" || retval=1
+    local transient_host="$(hostname)" || retval=1
+    _command hostnamectl || retval=1
+    test "$static_host" = "$transient_host" || retval=1
+    return $retval
 }
 
 test_hostname()
