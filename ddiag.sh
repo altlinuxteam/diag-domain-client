@@ -330,6 +330,16 @@ check_kerberos_and_ldap_srv_records()
     _command host -t srv "_ldap._tcp.$DOMAIN_DOMAIN"
 }
 
+compare_netbios_name()
+{
+    local netbios=$(echo "$SMB_NETBIOS_NAME" | tr '[:upper:]' '[:lower:]')
+    local host=$(echo "$HOSTNAME_SHORT" | tr '[:upper:]' '[:lower:]')
+
+    echo "SMB_NETBIOS_NAME = '$SMB_NETBIOS_NAME'"
+    echo "HOSTNAME_SHORT = '$HOSTNAME_SHORT'"
+    test "$netbios" = "$host" || return 1
+}
+
 run check_hostnamectl "Check hostname persistance"
 run test_hostname "Test hostname is FQDN (not short)"
 run check_system_auth "System authentication method"
@@ -348,3 +358,4 @@ run test_smb_realm "Check Samba domain realm"
 run test_domainname "Check hostname FQDN domainname"
 run check_nameservers "Check nameservers availability"
 run check_kerberos_and_ldap_srv_records "Check Kerberos and LDAP SRV-records"
+run compare_netbios_name "Compare NetBIOS name and hostname"
