@@ -103,6 +103,9 @@ check_hostnamectl()
 test_hostname()
 {
     local host=`hostname`
+    HOSTNAME_COMMON="$host"
+    HOSTNAME_SHORT=`hostname -s`
+    HOSTNAME_FQDN=`hostname -f`
     test "$host" != "${host/.}" || return 2
 }
 
@@ -262,6 +265,31 @@ test_smb_realm()
     return $retval
 }
 
+test_domainname()
+{
+    HOSTNAME_DOMAIN=`hostname -d`
+
+    if [ "$HOSTNAME_DOMAIN" = "$HOSTNAME_SHORT" -o "$HOSTNAME_DOMAIN" = '(none)' -o -z "$HOSTNAME_DOMAIN" ]; then
+        HOSTNAME_DOMAIN=
+        echo "HOSTNAME_DOMAIN = '$HOSTNAME_DOMAIN'"
+        return 2
+    fi
+
+    if [ -z "$DOMAIN_DOMAIN" ]; then
+        DOMAIN_DOMAIN="$HOSTNAME_DOMAIN"
+        test -n "$DOMAIN_REALM" ||
+            DOMAIN_REALM="$(echo "$DOMAIN_DOMAIN" | tr '[:lower:]' '[:upper:]')"
+        echo "HOSTNAME_DOMAIN = '$HOSTNAME_DOMAIN'"
+        echo "Update realm and domain from HOSTNAME_DOMAIN:"
+        echo " DOMAIN_REALM = '$DOMAIN_REALM'"
+        echo " DOMAIN_DOMAIN = '$DOMAIN_DOMAIN'"
+        return 2
+    fi
+
+    echo "HOSTNAME_DOMAIN = '$HOSTNAME_DOMAIN'"
+    test "$HOSTNAME_DOMAIN" = "$DOMAIN_DOMAIN" || return 1
+}
+
 _check_nameserver()
 {
     local ns="$1"
@@ -317,5 +345,6 @@ run compare_resolv_conf_with_default_realm "Compare krb5 realm and first search 
 run check_smb_conf "Check Samba configuration"
 run compare_smb_realm_with_krb5_default_realm "Compare samba and krb5 realms"
 run test_smb_realm "Check Samba domain realm"
+run test_domainname "Check hostname FQDN domainname"
 run check_nameservers "Check nameservers availability"
 run check_kerberos_and_ldap_srv_records "Check Kerberos and LDAP SRV-records"
