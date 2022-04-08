@@ -30,9 +30,11 @@ msg_done()
 
 _command()
 {
+    local retval=0
     color_message "\$ $*" bold
-    $*
+    $* || retval=$?
     echo
+    return $retval
 }
 
 run_by_root()
@@ -217,6 +219,8 @@ _check_nameserver()
     local ns="$1"
     if _command ping -c 2 -i2 "$ns"; then
         test -z "$DOMAIN_DOMAIN" || _command host "$DOMAIN_DOMAIN" "$ns"
+    else
+        return 1
     fi
 }
 
