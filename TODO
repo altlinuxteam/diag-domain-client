@@ -1,0 +1,52 @@
+TODO: set up options interpritation
+
+1. hostname
+2. versions
+2.1 samba
+2.2 krb5
+2.3 sssd
+3. controls
+3.1 
+4. resolv.conf
+4.1 search multiple domains
+4.2 systemd-resolved check
+?. klist -ke (info check)
+5. krb5.keytab
+6. krb5.keytab == hostname
+7. kinit (Administrator, current user, defined user)
+8. kinit -k MACHINE\$
+
+
+-. smbclient -L DC
+-.
+
+* Client in domain
+control system-auth (sss or winbind)
+sssd?
+|krb5.keytab
+|sssd.conf [domain] section and option fuck
+|smb.conf security != user (ads? )
+|service sssd enabled
+|nsswitch.conf (sss passwd and group)
+winbind?
+|krb5.keytab
+|smb.conf security != user (ads? )
+|service winbind enabled
+|nsswitch.conf (winbind for passwd and group)
+#smb.conf domain and realm
+kinit -k MACHINE\$ (current machine state in domain)
+kinit -k MACHINE\$ creds expiration check
+machine in samba or freeipa domain? (or alt domain)
+
+
+TODO:
+fix nameservers ping check
+pack conf and log files
+pack testparm -v -s output
+fix comments in end of string
+netbios name in smb.conf check with hostname 
+handle domain not found
+add attension message ???
+FQDN hostname as source for domain detection
+order of hostname detection (hostname, serach and other via samba) ???
+sss_ctl
