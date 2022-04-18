@@ -2,10 +2,52 @@
 set -euo pipefail
 
 . shell-terminfo
+. shell-getopt
 
 terminfo_init
 
-verbose=1
+PROG="domain-diag"
+VERSION=0.2
+verbose=
+
+show_usage()
+{
+    echo "Usage: $PROG [options]"
+    echo ""
+    echo "Samba environment diagnostic tool"
+    echo ""
+    echo "Options:"
+    echo "  -h, --help		This message"
+    echo "  -V, --version		Display version number"
+    echo "  -v, --verbose		Verbose output"
+    echo ""
+    exit 0;
+}
+
+print_version()
+{
+    echo "$VERSION"
+    exit 0;
+}
+
+TEMP=`getopt -n "$PROG" -o "v,V,h" -l "verbose,version,help" -- "$@"` || show_usage
+eval set -- "$TEMP"
+
+while :; do
+    case "$1" in
+        -h|--help) show_usage
+            ;;
+        -v|--verbose) verbose=1
+            ;;
+        -V|--version) print_version "$PROG"
+            ;;
+        --) break
+            ;;
+        *) fatal "Unrecognized option: $1"
+            ;;
+    esac
+    shift
+done
 
 msg_fail()
 {
