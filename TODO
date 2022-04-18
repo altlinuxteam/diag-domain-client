@@ -50,3 +50,5 @@ add attension message ???
 FQDN hostname as source for domain detection
 order of hostname detection (hostname, serach and other via samba) ???
 sss_ctl
+
+DNS_METHOD check
