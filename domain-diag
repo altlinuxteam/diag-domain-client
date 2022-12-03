@@ -168,7 +168,6 @@ check_system_auth()
     _command /usr/sbin/control system-auth
     _command readlink -f /etc/pam.d/system-auth
     _command -x cat /etc/pam.d/system-auth
-    SYSTEM_AUTH="$auth"
     test -n "$auth" -a "$auth" != "unknown"
 }
 
@@ -189,12 +188,10 @@ check_krb5_conf_exists()
 {
     local retval=0
     _command ls -l /etc/krb5.conf
-    KRB5_DEFAULT_REALM=
     if ! test -e /etc/krb5.conf; then
         is_system_auth_local && retval=2 || retval=1
     else
         _command -x cat /etc/krb5.conf
-        KRB5_DEFAULT_REALM=$(grep "^\s*default_realm\s\+" /etc/krb5.conf | sed -e 's/^\s*default_realm\s*=\s*//' -e 's/\s*$//')
     fi
     return $retval
 }
@@ -256,7 +253,6 @@ check_resolv_conf()
     local retval=0
     _command ls -l /etc/resolv.conf
     _command -x cat /etc/resolv.conf
-    SEARCH_DOMAIN=$(grep "^search\s\+" /etc/resolv.conf | sed -e 's/^search\s\+//' -e 's/\s/\n/' | head -1)
     NAMESERVER1=$(grep "^nameserver\s\+" /etc/resolv.conf | sed -e 's/^nameserver\s\+//' -e 's/\s/\n/' | head -1)
     NAMESERVER2=$(grep "^nameserver\s\+" /etc/resolv.conf | sed -e 's/^nameserver\s\+//' -e 's/\s/\n/' | head -2 | tail -1)
     NAMESERVER3=$(grep "^nameserver\s\+" /etc/resolv.conf | sed -e 's/^nameserver\s\+//' -e 's/\s/\n/' | head -3 | tail -1)
@@ -270,10 +266,7 @@ compare_resolv_conf_with_default_realm()
     local domain=$(echo "$SEARCH_DOMAIN" | tr '[:upper:]' '[:lower:]')
     local realm=$(echo "$KRB5_DEFAULT_REALM" | tr '[:upper:]' '[:lower:]')
 
-    DOMAIN_DOMAIN="$domain"
-    if test -n "$realm"; then
-        DOMAIN_DOMAIN="$realm"
-    else
+    if test -z "$realm"; then
         return 2
     fi
     test -n "$domain" || return 2
@@ -286,8 +279,6 @@ check_smb_conf()
     _command ls -l /etc/samba/smb.conf
     _command -x grep -v -e "'^\s*[#;]'" -e "'^\s*$'" /etc/samba/smb.conf
     _command -x testparm -l -s
-    SMB_REALM=$(testparm -l -v -s 2>/dev/null | grep "^\s*realm\s*=" | sed -e 's/^\s*realm\s*=\s*//' -e 's/\s*$//')
-    SMB_NETBIOS_NAME=$(testparm -l -v -s 2>/dev/null | grep "^\s*netbios name\s*=" | sed -e 's/^\s*netbios name\s*=\s*//' -e 's/\s*$//')
 }
 
 compare_smb_realm_with_krb5_default_realm()
@@ -452,9 +443,37 @@ custom_run()
 init_vars()
 {
     local host=`hostname`
+    local domain realm
     HOSTNAME_COMMON="$host"
     HOSTNAME_SHORT=`hostname -s`
     HOSTNAME_FQDN=`hostname -f`
+
+    SMB_REALM=
+    SMB_NETBIOS_NAME=
+    if which testparm >/dev/null 2>&1; then
+        SMB_REALM=$(testparm -l -v -s 2>/dev/null | grep "^\s*realm\s*=" | sed -e 's/^\s*realm\s*=\s*//' -e 's/\s*$//')
+        SMB_NETBIOS_NAME=$(testparm -l -v -s 2>/dev/null | grep "^\s*netbios name\s*=" | sed -e 's/^\s*netbios name\s*=\s*//' -e 's/\s*$//')
+    fi
+
+    SEARCH_DOMAIN=
+    if test -f /etc/resolv.conf; then
+        SEARCH_DOMAIN=$(grep "^search\s\+" /etc/resolv.conf | sed -e 's/^search\s\+//' -e 's/\s/\n/' | head -1)
+    fi
+
+    KRB5_DEFAULT_REALM=
+    if test -e /etc/krb5.conf; then
+        KRB5_DEFAULT_REALM=$(grep "^\s*default_realm\s\+" /etc/krb5.conf | sed -e 's/^\s*default_realm\s*=\s*//' -e 's/\s*$//')
+    fi
+
+    domain=$(echo "$SEARCH_DOMAIN" | tr '[:upper:]' '[:lower:]')
+    realm=$(echo "$KRB5_DEFAULT_REALM" | tr '[:upper:]' '[:lower:]')
+
+    DOMAIN_DOMAIN="$domain"
+    if test -n "$realm"; then
+        DOMAIN_DOMAIN="$realm"
+    fi
+
+    SYSTEM_AUTH="$(/usr/sbin/control system-auth)"
 }
 
 test -z $listcmd || runcmd=list_run
