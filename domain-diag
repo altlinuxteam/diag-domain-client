@@ -51,21 +51,21 @@ done
 
 msg_fail()
 {
-    echo -n " \ $*: ["
+    echo -n "$*: ["
     color_text "FAIL" red
     echo "]"
 }
 
 msg_warn()
 {
-    echo -n " \ $*: ["
+    echo -n "$*: ["
     color_text "WARN" yellow
     echo "]"
 }
 
 msg_done()
 {
-    echo -n " \ $*: ["
+    echo -n "$*: ["
     color_text "DONE" green
     echo "]"
 }
@@ -84,9 +84,9 @@ _command()
         p='#'
     fi
     color_message "$p $*" bold
-    test -z "$x" || echo -------------------------------------------------------------------------------
-    $* || retval=$?
-    test -z "$x" || echo -------------------------------------------------------------------------------
+    test -z "$x" || echo ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    eval $* || retval=$?
+    test -z "$x" || echo ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     echo
     return $retval
 }
@@ -102,6 +102,7 @@ run_by_root()
     if test `id -u` != 0; then
         echo -n "Running not by root, SKIP: "
         echo $*
+        echo
         return 2
     else
         test -z "$msg" ||
@@ -114,23 +115,25 @@ run()
 {
     local retval=126
     local func="$1"
-    local msg=$(printf "/======             %-52s ======" "$func")
+    local msg=$(printf "| %s |" "$func")
 
-    test -z $verbose || echo " /============================================================================="
+    test -z $verbose || color_message "===============================================================================" bold white
     if test -z $verbose; then
         $func >/dev/null 2>&1 && retval=0 || retval=$?
     else
         color_message "$msg" bold white
+        test -z $verbose || echo "-------------------------------------------------------------------------------"
+        echo
         $func && retval=0 || retval=$?
     fi
 
-    test -z $verbose || echo "\=============================================================================="
+    test -z $verbose || echo "-------------------------------------------------------------------------------"
     case "$retval" in
         0) msg_done  "$2" ;;
         2) msg_warn  "$2" ;;
         *) msg_fail "$2" ;;
     esac
-    test -z $verbose || color_message "  \============================================================================" bold white
+    test -z $verbose || color_message "===============================================================================" bold white
     test -z $verbose || echo
 }
 
@@ -147,6 +150,8 @@ check_hostnamectl()
 test_hostname()
 {
     local host=`hostname`
+    echo $host
+    echo
     HOSTNAME_COMMON="$host"
     HOSTNAME_SHORT=`hostname -s`
     HOSTNAME_FQDN=`hostname -f`
@@ -156,7 +161,7 @@ test_hostname()
 check_system_auth()
 {
     local auth=$(/usr/sbin/control system-auth)
-    echo "control system_auth: $auth"
+    _command /usr/sbin/control system-auth
     _command readlink -f /etc/pam.d/system-auth
     _command -x cat /etc/pam.d/system-auth
     SYSTEM_AUTH="$auth"
@@ -167,7 +172,8 @@ test_domain_system_auth()
 {
     test -n "$SYSTEM_AUTH" ||
         SYSTEM_AUTH=local
-    test "$SYSTEM_AUTH" != "local" || return 2
+    _command /usr/sbin/control system-auth
+    _command test "$SYSTEM_AUTH" != "local" || return 2
 }
 
 is_system_auth_local()
@@ -192,14 +198,15 @@ check_krb5_conf_exists()
 check_krb5_conf_ccache()
 {
     local ccache=$(/usr/sbin/control krb5-conf-ccache)
-    echo "control krb5-conf-ccache: $ccache"
+    _command /usr/sbin/control krb5-conf-ccache
     test -n "$ccache" -a "$ccache" != "unknown"
 }
 
 test_keyring_krb5_conf_ccache()
 {
     local ccache=$(/usr/sbin/control krb5-conf-ccache)
-    test -n "$ccache" -a "$ccache" == "keyring" || return 2
+    _command /usr/sbin/control krb5-conf-ccache
+    _command test -n "$ccache" -a "$ccache" == "keyring" || return 2
 }
 
 check_krb5_conf_kdc_lookup()
@@ -217,6 +224,7 @@ check_krb5_conf_kdc_lookup()
             retval=2
         fi
     fi
+    echo
     return $retval
 }
 
@@ -254,6 +262,7 @@ compare_resolv_conf_with_default_realm()
 {
     echo "SEARCH_DOMAIN = '$SEARCH_DOMAIN'"
     echo "KRB5_DEFAULT_REALM = '$KRB5_DEFAULT_REALM'"
+    echo
     local domain=$(echo "$SEARCH_DOMAIN" | tr '[:upper:]' '[:lower:]')
     local realm=$(echo "$KRB5_DEFAULT_REALM" | tr '[:upper:]' '[:lower:]')
 
@@ -281,6 +290,7 @@ compare_smb_realm_with_krb5_default_realm()
 {
     echo "SMB_REALM = '$SMB_REALM'"
     echo "KRB5_DEFAULT_REALM = '$KRB5_DEFAULT_REALM'"
+    echo
 
     test -n "$SMB_REALM" || return 2
     test -n "$KRB5_DEFAULT_REALM" || return 2
@@ -305,6 +315,7 @@ test_smb_realm()
 
     echo "DOMAIN_REALM = '$DOMAIN_REALM'"
     echo "DOMAIN_DOMAIN = '$DOMAIN_DOMAIN'"
+    echo
 
     return $retval
 }
@@ -316,6 +327,7 @@ test_domainname()
     if [ "$HOSTNAME_DOMAIN" = "$HOSTNAME_SHORT" -o "$HOSTNAME_DOMAIN" = '(none)' -o -z "$HOSTNAME_DOMAIN" ]; then
         HOSTNAME_DOMAIN=
         echo "HOSTNAME_DOMAIN = '$HOSTNAME_DOMAIN'"
+        echo
         return 2
     fi
 
@@ -327,10 +339,12 @@ test_domainname()
         echo "Update realm and domain from HOSTNAME_DOMAIN:"
         echo " DOMAIN_REALM = '$DOMAIN_REALM'"
         echo " DOMAIN_DOMAIN = '$DOMAIN_DOMAIN'"
+        echo
         return 2
     fi
 
     echo "HOSTNAME_DOMAIN = '$HOSTNAME_DOMAIN'"
+    echo
     test "$HOSTNAME_DOMAIN" = "$DOMAIN_DOMAIN" || return 1
 }
 
@@ -381,6 +395,7 @@ compare_netbios_name()
 
     echo "SMB_NETBIOS_NAME = '$SMB_NETBIOS_NAME'"
     echo "HOSTNAME_SHORT = '$HOSTNAME_SHORT'"
+    echo
     test "$netbios" = "$host" || return 1
 }
 
