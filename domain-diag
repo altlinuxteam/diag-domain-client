@@ -184,6 +184,23 @@ is_system_auth_local()
     test "$SYSTEM_AUTH" = "local"
 }
 
+check_system_policy()
+{
+    local policy=$(/usr/sbin/control system-policy)
+    _command /usr/sbin/control system-policy
+    _command readlink -f /etc/pam.d/system-policy
+    _command -x cat /etc/pam.d/system-policy
+    test -n "$policy" -a "$policy" != "unknown"
+}
+
+test_gpupdate_system_policy()
+{
+    test -n "$SYSTEM_POLICY" ||
+        SYSTEM_POLICY=local
+    _command /usr/sbin/control system-policy
+    _command test "$SYSTEM_POLICY" == "gpupdate" || return 2
+}
+
 check_krb5_conf_exists()
 {
     local retval=0
@@ -474,6 +491,7 @@ init_vars()
     fi
 
     SYSTEM_AUTH="$(/usr/sbin/control system-auth)"
+    SYSTEM_POLICY="$(/usr/sbin/control system-policy)"
 }
 
 test -z $listcmd || runcmd=list_run
@@ -486,6 +504,8 @@ $runcmd check_hostnamectl "Check hostname persistance"
 $runcmd test_hostname "Test hostname is FQDN (not short)"
 $runcmd check_system_auth "System authentication method"
 $runcmd test_domain_system_auth "Domain system authentication enabled"
+$runcmd check_system_policy "System policy method"
+$runcmd test_gpupdate_system_policy "System group policy enabled"
 $runcmd check_krb5_conf_exists "Check Kerberos configuration exists"
 $runcmd check_krb5_conf_ccache "Kerberos credential cache status"
 $runcmd test_keyring_krb5_conf_ccache "Using keyring as kerberos credential cache"
