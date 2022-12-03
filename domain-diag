@@ -9,6 +9,8 @@ terminfo_init
 PROG="domain-diag"
 VERSION=0.2
 verbose=
+listcmd=
+runcmd=run
 
 show_usage()
 {
@@ -20,6 +22,7 @@ show_usage()
     echo "  -h, --help		This message"
     echo "  -V, --version		Display version number"
     echo "  -v, --verbose		Verbose output"
+    echo "  -l, --list		List of tests"
     echo ""
     exit 0;
 }
@@ -30,7 +33,7 @@ print_version()
     exit 0;
 }
 
-TEMP=`getopt -n "$PROG" -o "v,V,h" -l "verbose,version,help" -- "$@"` || show_usage
+TEMP=`getopt -n "$PROG" -o "v,V,l,h" -l "verbose,version,list,help" -- "$@"` || show_usage
 eval set -- "$TEMP"
 
 while :; do
@@ -39,15 +42,19 @@ while :; do
             ;;
         -v|--verbose) verbose=1
             ;;
+        -l|--list) listcmd=1
+            ;;
         -V|--version) print_version "$PROG"
             ;;
-        --) break
+        --) shift; break
             ;;
         *) fatal "Unrecognized option: $1"
             ;;
     esac
     shift
 done
+
+customcmd="$*"
 
 msg_fail()
 {
@@ -85,7 +92,7 @@ _command()
     fi
     color_message "$p $*" bold
     test -z "$x" || echo ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    eval $* || retval=$?
+    eval "$*" || retval=$?
     test -z "$x" || echo ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     echo
     return $retval
@@ -149,12 +156,9 @@ check_hostnamectl()
 
 test_hostname()
 {
-    local host=`hostname`
+    local host="$HOSTNAME_COMMON"
     echo $host
     echo
-    HOSTNAME_COMMON="$host"
-    HOSTNAME_SHORT=`hostname -s`
-    HOSTNAME_FQDN=`hostname -f`
     test "$host" != "${host/.}" || return 2
 }
 
@@ -280,10 +284,10 @@ check_smb_conf()
 {
     local retval=0
     _command ls -l /etc/samba/smb.conf
-    _command -x grep -v -e '^\s*[#;]' -e '^\s*$' /etc/samba/smb.conf
-    _command -x testparm -s
-    SMB_REALM=$(testparm -v -s 2>/dev/null | grep "^\s*realm\s*=" | sed -e 's/^\s*realm\s*=\s*//' -e 's/\s*$//')
-    SMB_NETBIOS_NAME=$(testparm -v -s 2>/dev/null | grep "^\s*netbios name\s*=" | sed -e 's/^\s*netbios name\s*=\s*//' -e 's/\s*$//')
+    _command -x grep -v -e "'^\s*[#;]'" -e "'^\s*$'" /etc/samba/smb.conf
+    _command -x testparm -l -s
+    SMB_REALM=$(testparm -l -v -s 2>/dev/null | grep "^\s*realm\s*=" | sed -e 's/^\s*realm\s*=\s*//' -e 's/\s*$//')
+    SMB_NETBIOS_NAME=$(testparm -l -v -s 2>/dev/null | grep "^\s*netbios name\s*=" | sed -e 's/^\s*netbios name\s*=\s*//' -e 's/\s*$//')
 }
 
 compare_smb_realm_with_krb5_default_realm()
@@ -427,30 +431,58 @@ check_sssd_ad_packages()
 check_sssd_winbind_packages()
 {
     local retval=0
-    _command rpm -q task-auth-ad-winbind || retval=1
+    _command rpm -q task-auth-ad-winbind || retval=2
     return $retval
 }
 
-run check_hostnamectl "Check hostname persistance"
-run test_hostname "Test hostname is FQDN (not short)"
-run check_system_auth "System authentication method"
-run test_domain_system_auth "Domain system authentication enabled"
-run check_krb5_conf_exists "Check Kerberos configuration exists"
-run check_krb5_conf_ccache "Kerberos credential cache status"
-run test_keyring_krb5_conf_ccache "Using keyring as kerberos credential cache"
-run check_krb5_conf_kdc_lookup "Check DNS lookup kerberos KDC status"
-run check_krb5_keytab_exists "Check machine crendetial cache is exists"
-run check_keytab_credential_list "Check machine credentials list in keytab"
-run check_resolv_conf "Check nameserver resolver configuration"
-run compare_resolv_conf_with_default_realm "Compare krb5 realm and first search domain"
-run check_smb_conf "Check Samba configuration"
-run compare_smb_realm_with_krb5_default_realm "Compare samba and krb5 realms"
-run test_smb_realm "Check Samba domain realm"
-run test_domainname "Check hostname FQDN domainname"
-run check_nameservers "Check nameservers availability"
-run check_kerberos_and_ldap_srv_records "Check Kerberos and LDAP SRV-records"
-run compare_netbios_name "Compare NetBIOS name and hostname"
-run check_common_packages "Check common packages"
-run check_group_policy_packages "Check group policy packages"
-run check_sssd_ad_packages "Check SSSD AD packages"
-run check_sssd_winbind_packages "Check SSSD Winbind packages"
+list_run()
+{
+    test -z $verbose &&
+        echo "$1" ||
+        echo "$1: $2"
+}
+
+custom_run()
+{
+    if echo "$customcmd"  | tr ' ' '\n' | grep -q "^$1\$"; then
+        run "$1" "$2"
+    fi
+}
+
+init_vars()
+{
+    local host=`hostname`
+    HOSTNAME_COMMON="$host"
+    HOSTNAME_SHORT=`hostname -s`
+    HOSTNAME_FQDN=`hostname -f`
+}
+
+test -z $listcmd || runcmd=list_run
+
+init_vars
+
+test -z "$customcmd" || runcmd=custom_run
+
+$runcmd check_hostnamectl "Check hostname persistance"
+$runcmd test_hostname "Test hostname is FQDN (not short)"
+$runcmd check_system_auth "System authentication method"
+$runcmd test_domain_system_auth "Domain system authentication enabled"
+$runcmd check_krb5_conf_exists "Check Kerberos configuration exists"
+$runcmd check_krb5_conf_ccache "Kerberos credential cache status"
+$runcmd test_keyring_krb5_conf_ccache "Using keyring as kerberos credential cache"
+$runcmd check_krb5_conf_kdc_lookup "Check DNS lookup kerberos KDC status"
+$runcmd check_krb5_keytab_exists "Check machine crendetial cache is exists"
+$runcmd check_keytab_credential_list "Check machine credentials list in keytab"
+$runcmd check_resolv_conf "Check nameserver resolver configuration"
+$runcmd compare_resolv_conf_with_default_realm "Compare krb5 realm and first search domain"
+$runcmd check_smb_conf "Check Samba configuration"
+$runcmd compare_smb_realm_with_krb5_default_realm "Compare samba and krb5 realms"
+$runcmd test_smb_realm "Check Samba domain realm"
+$runcmd test_domainname "Check hostname FQDN domainname"
+$runcmd check_nameservers "Check nameservers availability"
+$runcmd check_kerberos_and_ldap_srv_records "Check Kerberos and LDAP SRV-records"
+$runcmd compare_netbios_name "Compare NetBIOS name and hostname"
+$runcmd check_common_packages "Check common packages"
+$runcmd check_group_policy_packages "Check group policy packages"
+$runcmd check_sssd_ad_packages "Check SSSD AD packages"
+$runcmd check_sssd_winbind_packages "Check SSSD Winbind packages"
