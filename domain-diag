@@ -14,9 +14,11 @@ runcmd=run
 
 show_usage()
 {
-    echo "Usage: $PROG [options]"
-    echo ""
     echo "Samba environment diagnostic tool"
+    echo ""
+    echo "Usage: $PROG [options] [<check/test-function-name>]"
+    echo ""
+    echo "<check/test-function-name> must be a function name from the list of tests"
     echo ""
     echo "Options:"
     echo "  -h, --help		This message"
