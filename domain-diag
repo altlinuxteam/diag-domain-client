@@ -67,6 +67,13 @@ done
 
 customcmd="$*"
 
+msg_non_root()
+{
+    echo -n "$*: ["
+    color_text "SKIP" blue
+    echo "]"
+}
+
 msg_fail()
 {
     echo -n "$*: ["
@@ -109,26 +116,6 @@ _command()
     return $retval
 }
 
-run_by_root()
-{
-    local msg=
-    if test "$1" = '-m'; then
-        shift
-        msg="$1"
-        shift
-    fi
-    if test `id -u` != 0; then
-        echo -n "Running not by root, SKIP: "
-        echo $*
-        echo
-        return 2
-    else
-        test -z "$msg" ||
-            echo -n "$msg: "
-        _command -r $* || return 1
-    fi
-}
-
 __header()
 {
     color_message "===============================================================================" bold white
@@ -144,6 +131,7 @@ __short_msg()
     case "$1" in
         0) msg_done  "$2" ;;
         2) msg_warn  "$2" ;;
+        102) msg_non_root  "$2" ;;
         *) msg_fail "$2" ;;
     esac
 }
@@ -187,6 +175,26 @@ print_head()
     echo "Branch: $(apt-repo list | cut -d ' ' -f 2 | grep -e '^\[.*\]$' | tail -1 | sed -E 's/\[(.*)\]/\1/')" | __log
     __footer | __log
     __newline | __log
+}
+
+is_root()
+{
+    if test $(id -u) != 0; then
+        return 1
+    fi
+    return 0
+}
+
+__not_root_skip()
+{
+    local msg=
+    if test -n "${1+x}" && test "$1" = '-m'; then
+        shift
+        msg="$1"
+    fi
+    echo -n "Running not by root, SKIP: $msg"
+    echo
+    echo
 }
 
 run()
@@ -326,7 +334,11 @@ check_krb5_keytab_exists()
 check_keytab_credential_list()
 {
     local retval=0
-    if ! run_by_root klist -ke; then
+    if ! is_root; then
+        __not_root_skip && return 102
+    fi
+
+    if ! _command -r klist -ke; then
         is_system_auth_local && retval=2 || retval=1
     fi
     return $retval
