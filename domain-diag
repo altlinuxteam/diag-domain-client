@@ -316,9 +316,6 @@ check_resolv_conf()
     local retval=0
     _command ls -l /etc/resolv.conf
     _command -x cat /etc/resolv.conf
-    NAMESERVER1=$(grep "^nameserver\s\+" /etc/resolv.conf | sed -e 's/^nameserver\s\+//' -e 's/\s/\n/' | head -1)
-    NAMESERVER2=$(grep "^nameserver\s\+" /etc/resolv.conf | sed -e 's/^nameserver\s\+//' -e 's/\s/\n/' | head -2 | tail -1)
-    NAMESERVER3=$(grep "^nameserver\s\+" /etc/resolv.conf | sed -e 's/^nameserver\s\+//' -e 's/\s/\n/' | head -3 | tail -1)
 }
 
 compare_resolv_conf_with_default_realm()
@@ -519,6 +516,10 @@ init_vars()
     HOSTNAME_COMMON="$host"
     HOSTNAME_SHORT=`hostname -s`
     HOSTNAME_FQDN=`hostname -f`
+
+    NAMESERVER1=$(grep "^nameserver\s\+" /etc/resolv.conf | sed -e 's/^nameserver\s\+//' -e 's/\s/\n/' | head -1)
+    NAMESERVER2=$(grep "^nameserver\s\+" /etc/resolv.conf | sed -e 's/^nameserver\s\+//' -e 's/\s/\n/' | head -2 | tail -1)
+    NAMESERVER3=$(grep "^nameserver\s\+" /etc/resolv.conf | sed -e 's/^nameserver\s\+//' -e 's/\s/\n/' | head -3 | tail -1)
 
     SMB_REALM=
     SMB_NETBIOS_NAME=
