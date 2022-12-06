@@ -153,12 +153,23 @@ __delimiter()
     echo "-------------------------------------------------------------------------------"
 }
 
+__check_title()
+{
+    color_message "$1" bold white
+}
+
 __newline()
 {
     echo
 }
 
 __log()
+{
+    test -z $verbose && tee -a "$logfile" 2>&1 >/dev/null ||
+        tee -a "$logfile"
+}
+
+__log_force_print()
 {
     tee -a "$logfile"
 }
@@ -169,29 +180,20 @@ run()
     local func="$1"
     local msg=$(printf "| %s |" "$func")
 
-    # Verbose disabled, logging enabled
-    test -z $verbose && __header | __log 2>&1 >/dev/null ||
-            __header | __log
+    __header | __log
 
-    if test -z $verbose; then
-        $func 2>&1 | __log >/dev/null 2>&1 && retval=0 || retval=$?
-    else
-        color_message "$msg" bold white | __log
-        test -z $verbose || __delimiter | __log
-        __newline | __log
-        $func 2>&1 | __log && retval=0 || retval=$?
-    fi
+    __check_title "$msg" | __log
+    __delimiter | __log
+    __newline | __log
 
-    test -z $verbose && __delimiter | __log 2>&1 >/dev/null ||
-            __delimiter | __log
+    $func 2>&1 | __log && retval=0 || retval=$?
 
-    __short_msg $retval "$2" | __log
+    __delimiter | __log
 
-    test -z $verbose && __footer | __log 2>&1 >/dev/null ||
-            __footer | __log
+    __short_msg $retval "$2" | __log_force_print
 
-    test -z $verbose && __newline | __log 2>&1 >/dev/null ||
-            __newline | __log
+    __footer | __log
+    __newline | __log
 }
 
 check_hostnamectl()
