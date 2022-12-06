@@ -11,6 +11,7 @@ VERSION=0.2
 verbose=
 listcmd=
 runcmd=run
+logfile=/dev/null
 
 show_usage()
 {
@@ -21,10 +22,11 @@ show_usage()
     echo "<check/test-function-name> must be a function name from the list of tests"
     echo ""
     echo "Options:"
-    echo "  -h, --help		This message"
-    echo "  -V, --version		Display version number"
-    echo "  -v, --verbose		Verbose output"
-    echo "  -l, --list		List of tests"
+    echo "  -h, --help			This message"
+    echo "  -V, --version			Display version number"
+    echo "  -v, --verbose			Verbose output"
+    echo "  -w, --logfile[=FILE]		Write verbose output to file"
+    echo "  -l, --list			List of tests"
     echo ""
     exit 0;
 }
@@ -35,7 +37,7 @@ print_version()
     exit 0;
 }
 
-TEMP=`getopt -n "$PROG" -o "v,V,l,h" -l "verbose,version,list,help" -- "$@"` || show_usage
+TEMP=`getopt -n "$PROG" -o "v,V,w::,l,h" -l "verbose,version,logfile::,list,help" -- "$@"` || show_usage
 eval set -- "$TEMP"
 
 while :; do
@@ -43,6 +45,9 @@ while :; do
         -h|--help) show_usage
             ;;
         -v|--verbose) verbose=1
+            ;;
+        -w|--logfile) shift
+             test -n "$1" && logfile="$1" || logfile=domain-diag.log
             ;;
         -l|--list) listcmd=1
             ;;
@@ -120,30 +125,69 @@ run_by_root()
     fi
 }
 
+__header()
+{
+    color_message "===============================================================================" bold white
+}
+
+__footer()
+{
+    color_message "===============================================================================" bold white
+}
+
+__short_msg()
+{
+    case "$1" in
+        0) msg_done  "$2" ;;
+        2) msg_warn  "$2" ;;
+        *) msg_fail "$2" ;;
+    esac
+}
+
+__delimiter()
+{
+    echo "-------------------------------------------------------------------------------"
+}
+
+__newline()
+{
+    echo
+}
+
+__log()
+{
+    tee -a "$logfile"
+}
+
 run()
 {
     local retval=126
     local func="$1"
     local msg=$(printf "| %s |" "$func")
 
-    test -z $verbose || color_message "===============================================================================" bold white
+    # Verbose disabled, logging enabled
+    test -z $verbose && __header | __log 2>&1 >/dev/null ||
+            __header | __log
+
     if test -z $verbose; then
-        $func >/dev/null 2>&1 && retval=0 || retval=$?
+        $func 2>&1 | __log >/dev/null 2>&1 && retval=0 || retval=$?
     else
-        color_message "$msg" bold white
-        test -z $verbose || echo "-------------------------------------------------------------------------------"
-        echo
-        $func && retval=0 || retval=$?
+        color_message "$msg" bold white | __log
+        test -z $verbose || __delimiter | __log
+        __newline | __log
+        $func 2>&1 | __log && retval=0 || retval=$?
     fi
 
-    test -z $verbose || echo "-------------------------------------------------------------------------------"
-    case "$retval" in
-        0) msg_done  "$2" ;;
-        2) msg_warn  "$2" ;;
-        *) msg_fail "$2" ;;
-    esac
-    test -z $verbose || color_message "===============================================================================" bold white
-    test -z $verbose || echo
+    test -z $verbose && __delimiter | __log 2>&1 >/dev/null ||
+            __delimiter | __log
+
+    __short_msg $retval "$2" | __log
+
+    test -z $verbose && __footer | __log 2>&1 >/dev/null ||
+            __footer | __log
+
+    test -z $verbose && __newline | __log 2>&1 >/dev/null ||
+            __newline | __log
 }
 
 check_hostnamectl()
@@ -459,6 +503,15 @@ custom_run()
     fi
 }
 
+init_log()
+{
+    local log_index
+    if test -e "$logfile" && test "$logfile" != "/dev/null"; then
+        log_index=$(ls $logfile.* 2>/dev/null | sort -V | tail -1 | sed -E 's/^.*\.([^.]*)$/\1/' || true)
+        logfile="$logfile".$(($log_index + 1))
+    fi
+}
+
 init_vars()
 {
     local host=`hostname`
@@ -498,6 +551,7 @@ init_vars()
 
 test -z $listcmd || runcmd=list_run
 
+init_log
 init_vars
 
 test -z "$customcmd" || runcmd=custom_run
@@ -527,3 +581,6 @@ $runcmd check_common_packages "Check common packages"
 $runcmd check_group_policy_packages "Check group policy packages"
 $runcmd check_sssd_ad_packages "Check SSSD AD packages"
 $runcmd check_sssd_winbind_packages "Check SSSD Winbind packages"
+
+test -f "$logfile" && test -w "$logfile" &&
+        sed -i 's/\x1b\[[0-9;]*[mGKH]//g' $logfile
