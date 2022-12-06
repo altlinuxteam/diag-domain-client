@@ -12,6 +12,7 @@ verbose=
 listcmd=
 runcmd=run
 logfile=/dev/null
+force=
 
 show_usage()
 {
@@ -26,6 +27,7 @@ show_usage()
     echo "  -V, --version			Display version number"
     echo "  -v, --verbose			Verbose output"
     echo "  -w, --logfile[=FILE]		Write verbose output to file"
+    echo "  -f, --force			Force logging to existing file"
     echo "  -l, --list			List of tests"
     echo ""
     exit 0;
@@ -37,7 +39,7 @@ print_version()
     exit 0;
 }
 
-TEMP=`getopt -n "$PROG" -o "v,V,w::,l,h" -l "verbose,version,logfile::,list,help" -- "$@"` || show_usage
+TEMP=`getopt -n "$PROG" -o "v,V,w::,f,l,h" -l "verbose,version,logfile::,force,list,help" -- "$@"` || show_usage
 eval set -- "$TEMP"
 
 while :; do
@@ -48,6 +50,8 @@ while :; do
             ;;
         -w|--logfile) shift
              test -n "$1" && logfile="$1" || logfile=domain-diag.log
+            ;;
+        -f|--force) force=1
             ;;
         -l|--list) listcmd=1
             ;;
@@ -503,9 +507,12 @@ custom_run()
 init_log()
 {
     local log_index
-    if test -e "$logfile" && test "$logfile" != "/dev/null"; then
+    if test -e "$logfile" && test "$logfile" != "/dev/null" && test -z "$force"; then
         log_index=$(ls $logfile.* 2>/dev/null | sort -V | tail -1 | sed -E 's/^.*\.([^.]*)$/\1/' || true)
         logfile="$logfile".$(($log_index + 1))
+    fi
+    if test "$logfile" != "/dev/null"; then
+        echo -n > "$logfile"
     fi
 }
 
