@@ -95,20 +95,36 @@ msg_done()
     echo "]"
 }
 
-_command()
+__command_msg()
 {
-    local retval=0
-    local x=
     local p='$'
-    if test "$1" = '-x'; then
-        shift
-        x=1
-    fi
     if test "$1" = '-r'; then
         shift
         p='#'
     fi
     color_message "$p $*" bold
+}
+
+_command()
+{
+    local retval=0
+    local x=
+    local q=
+    local r=
+    if test "$1" = '-q'; then
+        shift
+        q=1
+    fi
+    if test "$1" = '-r'; then
+        shift
+        r=1
+    fi
+    if test "$1" = '-x'; then
+        shift
+        x=1
+    fi
+    test -z "$q" && test -z "$r" && __command_msg "$*"
+    test -z "$q" && test -n "$r" && __command_msg -r "$*"
     test -z "$x" || echo ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     eval "$*" || retval=$?
     test -z "$x" || echo ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -436,6 +452,21 @@ test_domainname()
     test "$HOSTNAME_DOMAIN" = "$DOMAIN_DOMAIN" || return 1
 }
 
+check_time_synchronization()
+{
+    local retval=0
+    _command timedatectl || return 1
+}
+
+test_time_synchronization()
+{
+    local retval=0
+    local func='test $(timedatectl show -p NTPSynchronized --value) == "yes"' 
+    __command_msg $func
+    _command -q $func || retval=2
+    return $retval
+}
+
 _check_nameserver()
 {
     local ns="$1"
@@ -612,6 +643,8 @@ $runcmd check_smb_conf "Check Samba configuration"
 $runcmd compare_smb_realm_with_krb5_default_realm "Compare samba and krb5 realms"
 $runcmd test_smb_realm "Check Samba domain realm"
 $runcmd test_domainname "Check hostname FQDN domainname"
+$runcmd check_time_synchronization "Check time synchronization"
+$runcmd test_time_synchronization "Time synchronization enabled"
 $runcmd check_nameservers "Check nameservers availability"
 $runcmd check_kerberos_and_ldap_srv_records "Check Kerberos and LDAP SRV-records"
 $runcmd compare_netbios_name "Compare NetBIOS name and hostname"
