@@ -500,6 +500,55 @@ check_nameservers()
     return 2
 }
 
+_ldap_get_computer()
+{
+    local retval=0
+    local dc="$1"
+    local computer="$2"
+    local filter=""
+    if test -n "${3+x}"; then
+        filter="$3"
+    fi
+    local domain_dn=$(echo $DOMAIN_DOMAIN | sed 's/\./,dc=/g' | sed 's/^/dc=/')
+    local searchcmd="ldapsearch -Y GSSAPI -N -h $dc -b $domain_dn \
+            \"(&(ObjectClass=computer)(objectCategory=Computer)(name=$computer))\""
+    __command_msg $searchcmd $filter
+    _command -q $searchcmd $filter || retval=2
+    return $retval
+}
+
+_check_domain_controller()
+{
+    local retval=0
+    local dc="$1"
+    local computer=$(echo $1 | sed 's/\..*$//')
+    local ldap_computer=
+    _ldap_get_computer "$dc" "$computer" "| grep 'operating\|name:' | cut -d ' ' -f 2 | tr '\n' ' '" || retval=2
+    return $retval
+}
+
+check_domain_controllers()
+{
+    local retval=2
+    local hostcmd="host -t srv _ldap._tcp.$DOMAIN_DOMAIN | cut -d ' ' -f 8"
+    local resolv_msg=
+    __command_msg $hostcmd
+    local controllers_names=$(_command -q $hostcmd || retval=2)
+    echo $controllers_names | sed 's/ /\n/g'
+    echo
+    for controller_name in $controllers_names; do
+        resolv_msg="host $controller_name | sed 's/^.* //g'"
+        _command $resolv_msg
+    done
+    for controller_name in $controllers_names; do
+        # TODO: Add controller check by ip
+        _check_domain_controller $controller_name && retval=0
+    done
+    test -z "$controllers_names" && retval=2
+    ! is_system_auth_local && test $retval != 0 && retval=1
+    return $retval
+}
+
 check_kerberos_and_ldap_srv_records()
 {
     test -n "$DOMAIN_DOMAIN" || return 1
@@ -646,6 +695,7 @@ $runcmd test_domainname "Check hostname FQDN domainname"
 $runcmd check_time_synchronization "Check time synchronization"
 $runcmd test_time_synchronization "Time synchronization enabled"
 $runcmd check_nameservers "Check nameservers availability"
+$runcmd check_domain_controllers "Check domain controllers list"
 $runcmd check_kerberos_and_ldap_srv_records "Check Kerberos and LDAP SRV-records"
 $runcmd compare_netbios_name "Compare NetBIOS name and hostname"
 $runcmd check_common_packages "Check common packages"
