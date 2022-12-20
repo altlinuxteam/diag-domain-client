@@ -646,7 +646,7 @@ init_vars()
 
     SEARCH_DOMAIN=
     if test -f /etc/resolv.conf; then
-        SEARCH_DOMAIN=$(grep "^search\s\+" /etc/resolv.conf | sed -e 's/^search\s\+//' -e 's/\s/\n/' | head -1)
+        SEARCH_DOMAIN=$(grep "^search\s\+" /etc/resolv.conf || true | sed -e 's/^search\s\+//' -e 's/\s/\n/' | head -1 )
     fi
 
     KRB5_DEFAULT_REALM=
