@@ -16,7 +16,7 @@ force=
 
 show_usage()
 {
-    echo "Samba environment diagnostic tool"
+    echo "Active Directory domain environment diagnostic tool"
     echo ""
     echo "Usage: $PROG [options] [<check/test-function-name>]"
     echo ""
