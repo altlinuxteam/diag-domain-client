@@ -7,7 +7,7 @@ set -euo pipefail
 terminfo_init
 
 PROG="domain-diag"
-VERSION=0.2
+VERSION=0.2.1
 verbose=
 listcmd=
 runcmd=run
