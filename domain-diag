@@ -536,8 +536,24 @@ _check_domain_controller()
     local computer=
     local ldap_computer=
     local computer=
+    local hostname_upper=
+    hostname_upper=$(echo $HOSTNAME_SHORT | tr '[:lower:]' '[:upper:]')
+    local domain_upper=
+    domain_upper=$(echo $DOMAIN_DOMAIN | tr '[:lower:]' '[:upper:]')
+    local kinit_realm="$hostname_upper\$\@$domain_upper"
+    if is_root; then
+        KRB5CCNAME="FILE:/tmp/domain-diag_krb5cc_%{uid}"
+        _command kinit -k "$kinit_realm" || retval=2
+        if test "$retval" != "0"; then
+            is_system_auth_local && return 2 || return 1
+        fi
+    fi
+    
     computer="$(echo $1 | sed 's/\..*$//')"
     _ldap_get_computer "$dc" "$computer" "| grep 'operating\|name:' | cut -d ' ' -f 2 | tr '\n' ' '" || retval=2
+    
+    __newline
+    _command kdestroy -A
     return $retval
 }
 
