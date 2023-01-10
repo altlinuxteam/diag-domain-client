@@ -522,7 +522,7 @@ _ldap_get_computer()
         filter="$3"
     fi
     domain_dn=$(echo $DOMAIN_DOMAIN | sed 's/\./,dc=/g' | sed 's/^/dc=/')
-    local searchcmd="ldapsearch -Y GSSAPI -N -h $dc -b $domain_dn"
+    local searchcmd="ldapsearch -o nettimeout=30 -Y GSSAPI -N -h $dc -b $domain_dn"
     searchcmd="$searchcmd \"(&(ObjectClass=computer)(objectCategory=Computer)(name=$computer))\""
     __command_msg "$searchcmd $filter"
     _command -q "$searchcmd" "$filter" || retval=2
