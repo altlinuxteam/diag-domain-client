@@ -1,5 +1,5 @@
 Name: domain-diag
-Version: 0.2.1
+Version: 0.2.2
 Release: alt1
 
 Summary: Active Directory domain environment diagnostic tool
@@ -31,6 +31,10 @@ shellcheck -e SC1090,SC1091,SC2004,SC2015,SC2034,SC2086,SC2154,SC2001,SC2120,SC2
 %_bindir/%name
 
 %changelog
+* Tue Jan 10 2023 Andrey Limachko <liannnix@altlinux.org> 0.2.2-alt1
+- Added kinit from system keytab when run as root
+- Fixed ldapsearch timeout limit
+
 * Wed Dec 21 2022 Andrey Limachko <liannnix@altlinux.org> 0.2.1-alt1
 - Initial build
 
