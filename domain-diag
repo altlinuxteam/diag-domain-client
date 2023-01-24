@@ -685,7 +685,7 @@ init_vars()
 
     KRB5_DEFAULT_REALM=
     if test -e /etc/krb5.conf; then
-        KRB5_DEFAULT_REALM=$(grep "^\s*default_realm\s\+" /etc/krb5.conf | sed -e 's/^\s*default_realm\s*=\s*//' -e 's/\s*$//')
+        KRB5_DEFAULT_REALM=$(grep "^\s*default_realm\s\+" /etc/krb5.conf || true | sed -e 's/^\s*default_realm\s*=\s*//' -e 's/\s*$//')
     fi
 
     domain=$(echo "$SEARCH_DOMAIN" | tr '[:upper:]' '[:lower:]')
