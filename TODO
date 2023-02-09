@@ -52,3 +52,8 @@ order of hostname detection (hostname, serach and other via samba) ???
 sss_ctl
 
 DNS_METHOD check
+
+Check versions of all (Windows) Domain Controllers
+Multiword search in resolv.conf
+
+Add sssd.conf output
