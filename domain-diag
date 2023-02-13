@@ -376,19 +376,23 @@ check_resolv_conf()
 
 compare_resolv_conf_with_default_realm()
 {
-    echo "SEARCH_DOMAIN = '$SEARCH_DOMAIN'"
+    echo "SEARCH_DOMAINS = '$SEARCH_DOMAINS'"
     echo "KRB5_DEFAULT_REALM = '$KRB5_DEFAULT_REALM'"
     echo
     local domain=
     local realm=
-    domain=$(echo "$SEARCH_DOMAIN" | tr '[:upper:]' '[:lower:]')
+    local retval=2
+
+    domains=$(echo "$SEARCH_DOMAINS" | tr '[:upper:]' '[:lower:]')
     realm=$(echo "$KRB5_DEFAULT_REALM" | tr '[:upper:]' '[:lower:]')
 
-    if test -z "$realm"; then
-        return 2
-    fi
-    test -n "$domain" || return 2
-    test "$domain" = "$realm" || return 2
+    test -z "$realm" && return $retval
+    test -z "$domains" && return $retval
+    
+    for domain in $domains; do
+        test "$domain" = "$realm" && retval=0
+    done
+    return $retval
 }
 
 check_smb_conf()
@@ -678,22 +682,26 @@ init_vars()
         SMB_NETBIOS_NAME=$(testparm -l -v -s 2>/dev/null | grep "^\s*netbios name\s*=" | sed -e 's/^\s*netbios name\s*=\s*//' -e 's/\s*$//')
     fi
 
-    SEARCH_DOMAIN=
+    SEARCH_DOMAINS=
+    local search_line=
     if test -f /etc/resolv.conf; then
-        SEARCH_DOMAIN=$(grep "^search\s\+" /etc/resolv.conf || true | sed -e 's/^search\s\+//' -e 's/\s/\n/' | head -1 )
+        search_line=$(grep "^search\s\+" /etc/resolv.conf)
+        SEARCH_DOMAINS=$(echo $search_line | sed -e 's/^search\s\+//' -e 's/\s\+$//' )
     fi
 
     KRB5_DEFAULT_REALM=
+    local krb5_default_realm_line=
     if test -e /etc/krb5.conf; then
-        KRB5_DEFAULT_REALM=$(grep "^\s*default_realm\s\+" /etc/krb5.conf || true | sed -e 's/^\s*default_realm\s*=\s*//' -e 's/\s*$//')
+        krb5_default_realm_line=$(grep "^\s*default_realm\s\+" /etc/krb5.conf)
+        KRB5_DEFAULT_REALM=$( echo "$krb5_default_realm_line" | sed -e 's/^\s*default_realm\s*=\s*//' -e 's/\s*$//')
     fi
 
-    domain=$(echo "$SEARCH_DOMAIN" | tr '[:upper:]' '[:lower:]')
     realm=$(echo "$KRB5_DEFAULT_REALM" | tr '[:upper:]' '[:lower:]')
 
-    DOMAIN_DOMAIN="$domain"
     if test -n "$realm"; then
         DOMAIN_DOMAIN="$realm"
+    else
+        DOMAIN_DOMAIN=$(echo $SEARCH_DOMAINS | cut -d ' ' -f 1 | tr '[:upper:]' '[:lower:]')
     fi
 
     SYSTEM_AUTH="$(/usr/sbin/control system-auth)"
