@@ -671,9 +671,11 @@ init_vars()
     HOSTNAME_SHORT=$(hostname -s)
     HOSTNAME_FQDN=$(hostname -f)
 
-    NAMESERVER1=$(grep "^nameserver\s\+" /etc/resolv.conf | sed -e 's/^nameserver\s\+//' -e 's/\s/\n/' | head -1)
-    NAMESERVER2=$(grep "^nameserver\s\+" /etc/resolv.conf | sed -e 's/^nameserver\s\+//' -e 's/\s/\n/' | head -2 | tail -1)
-    NAMESERVER3=$(grep "^nameserver\s\+" /etc/resolv.conf | sed -e 's/^nameserver\s\+//' -e 's/\s/\n/' | head -3 | tail -1)
+    local nameserver_lines=
+    nameserver_lines=$(grep "^nameserver\s\+" /etc/resolv.conf || true)
+    NAMESERVER1=$(echo "$nameserver_lines" | sed -e 's/^nameserver\s\+//' -e 's/\s/\n/' | head -1)
+    NAMESERVER2=$(echo "$nameserver_lines" | sed -e 's/^nameserver\s\+//' -e 's/\s/\n/' | head -2 | tail -1)
+    NAMESERVER3=$(echo "$nameserver_lines" | sed -e 's/^nameserver\s\+//' -e 's/\s/\n/' | head -3 | tail -1)
 
     SMB_REALM=
     SMB_NETBIOS_NAME=
@@ -685,14 +687,14 @@ init_vars()
     SEARCH_DOMAINS=
     local search_line=
     if test -f /etc/resolv.conf; then
-        search_line=$(grep "^search\s\+" /etc/resolv.conf)
+        search_line=$(grep "^search\s\+" /etc/resolv.conf || true)
         SEARCH_DOMAINS=$(echo $search_line | sed -e 's/^search\s\+//' -e 's/\s\+$//' )
     fi
 
     KRB5_DEFAULT_REALM=
     local krb5_default_realm_line=
     if test -e /etc/krb5.conf; then
-        krb5_default_realm_line=$(grep "^\s*default_realm\s\+" /etc/krb5.conf)
+        krb5_default_realm_line=$(grep "^\s*default_realm\s\+" /etc/krb5.conf || true)
         KRB5_DEFAULT_REALM=$( echo "$krb5_default_realm_line" | sed -e 's/^\s*default_realm\s*=\s*//' -e 's/\s*$//')
     fi
 
