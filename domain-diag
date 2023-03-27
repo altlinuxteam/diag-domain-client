@@ -13,6 +13,7 @@ listcmd=
 runcmd=run
 logfile=/dev/null
 force=
+global_retval=0
 
 show_usage()
 {
@@ -234,6 +235,7 @@ run()
 
     __footer | __log
     __newline | __log
+    return $retval
 }
 
 check_hostnamectl()
@@ -636,6 +638,14 @@ check_sssd_winbind_packages()
     return $retval
 }
 
+default_run()
+{
+    local retval=0
+    run "$1" "$2" || retval=$?
+    test $retval = 1 && global_retval=1
+    return 0
+}
+
 list_run()
 {
     test -z $verbose &&
@@ -646,7 +656,7 @@ list_run()
 custom_run()
 {
     if echo "$customcmd"  | tr ' ' '\n' | grep -q "^$1\$"; then
-        run "$1" "$2"
+        run "$1" "$2" && global_retval=0 || global_retval=$?
     fi
 }
 
@@ -710,13 +720,20 @@ init_vars()
     SYSTEM_POLICY="$(/usr/sbin/control system-policy)"
 }
 
-test -z $listcmd || runcmd=list_run
+if ! test -z $listcmd; then
+    runcmd=list_run
+elif ! test -z "$customcmd"; then
+    runcmd=custom_run
+    global_retval=127
+else
+    runcmd=default_run
+fi
 
-init_log
-print_head
-init_vars
-
-test -z "$customcmd" || runcmd=custom_run
+if test -z $listcmd; then
+    init_log
+    print_head
+    init_vars
+fi
 
 $runcmd check_hostnamectl "Check hostname persistance"
 $runcmd test_hostname "Test hostname is FQDN (not short)"
@@ -749,3 +766,5 @@ $runcmd check_sssd_winbind_packages "Check SSSD Winbind packages"
 
 test -f "$logfile" && test -w "$logfile" &&
         sed -i 's/\x1b\[[0-9;]*[mGKH]//g' $logfile
+
+exit "$global_retval"
