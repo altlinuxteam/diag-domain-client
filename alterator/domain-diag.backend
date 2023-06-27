@@ -1,0 +1,21 @@
+[Manager]
+module_name = executor
+node_name = domain_diag
+interface_name = diag1
+
+[info]
+execute = cat /usr/share/alterator/backends/domain-diag.desktop
+stdout_strings = enabled
+stdout_strings_limit = 200000
+
+[run]
+execute = domain-diag {param}
+stdout_strings = enabled
+stdout_strings_limit = 200000
+
+[list]
+execute = domain-diag -l
+stdout_strings = enabled
+stdout_strings_limit = 200000
+action_id = list
+
