@@ -1,4 +1,13 @@
 #!/bin/bash
+#
+# Copyright (c) 2022-2023 Andrey Limachko <liannnix@altlinux.org>
+# Copyright (c) 2022-2023 Evgeny Sinelnikov <sin@altlinux.org>
+#
+# Active Directory domain environment diagnostic tool
+#
+# SPDX-License-Identifier: GPL-2.0-or-later
+#
+
 set -euo pipefail
 
 . shell-terminfo
