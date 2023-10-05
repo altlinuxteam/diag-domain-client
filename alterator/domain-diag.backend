@@ -5,13 +5,14 @@ interface_name = diag1
 
 [info]
 execute = cat /usr/share/alterator/backends/domain-diag.desktop
-stdout_strings = enabled
-stdout_strings_limit = 200000
+stdout_bytes = enabled
+stdout_byte_limit = 200000
 
 [run]
 execute = domain-diag {param}
-stdout_strings = enabled
-stdout_strings_limit = 200000
+stdout_signal_name = diag1_stdout_signal
+stderr_signal_name = diag1_stderr_signal
+thread_limit = 3
 
 [list]
 execute = domain-diag -l
