@@ -1,5 +1,5 @@
 Name: domain-diag
-Version: 0.2.5
+Version: 0.2.6
 Release: alt1
 
 Summary: Active Directory domain environment diagnostic tool
@@ -39,6 +39,12 @@ shellcheck -e SC1090,SC1091,SC2004,SC2015,SC2034,SC2086,SC2154,SC2001,SC2120,SC2
 %_alterator_datadir/backends/%name.*
 
 %changelog
+* Tue Oct 17 2023 Andrey Limachko <liannnix@altlinux.org> 0.2.6-alt1
+- chore: change methods names to alterator-manager interface
+  0.1.8-alt1 (thx Aleksey Saprunov)
+- chore: add actions_ids (thx Aleksey Saprunov)
+- change run method signature (thx Aleksey Saprunov)
+
 * Tue Jun 27 2023 Andrey Limachko <liannnix@altlinux.org> 0.2.5-alt1
 - Add ADT backend bindings
 
