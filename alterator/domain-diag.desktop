@@ -1,236 +1,236 @@
 [Desktop Entry]
 name=domain_diag
-name[ru_RU]=диагностика домена
+name[ru_RU]=Диагностика домена
 name[en_US]=domain diagnostic tool
 
 description=diag_1 description
-description[ru_RU]=описание диагностического теста1
+description[ru_RU]=Инструмент диагностики операционной системы в составе домена
 description[en_US]=description diag test1
 
 icon=system-run
 
 [check_hostnamectl]
 name = check_hostnamectl
-name[ru_RU]=тест check_hostnamectl
-name[en_US]=test check_hostnamectl
+name[ru_RU]=Проверка check_hostnamectl
+name[en_US]=Test check_hostnamectl
 description= desc check_hostnamectl
-description[ru_RU]=описание check_hostnamectl
+description[ru_RU]=Информация о настройках хоста - check_hostnamectl
 description[en_US]=description check_hostnamectl
 
 [test_hostname]
 name = test_hostname
-name[ru_RU]=тест test_hostname
+name[ru_RU]=Проверка test_hostname
 name[en_US]=test test_hostname
 description=desc test_hostname
-description[ru_RU]=описание test_hostname
-description[en_US]=description  test_hostname
+description[ru_RU]=Информация о полном именя хоста - test_hostname
+description[en_US]=description test_hostname
 
 [check_system_auth]
 name = check_system_auth
-name[ru_RU]=тест check_system_auth
+name[ru_RU]=Проверка check_system_auth
 name[en_US]=test check_system_auth
 description=desc check_system_auth
-description[ru_RU]=описание check_system_auth
+description[ru_RU]=Информация о методе аутентификации компьютера в домене - check_system_auth
 description[en_US]=description check_system_auth
 
 [test_domain_system_auth]
 name = test_domain_system_auth
-name[ru_RU]=тест test_domain_system_auth
+name[ru_RU]=Проверка test_domain_system_auth
 name[en_US]=test test_domain_system_auth
 description=desc test_domain_system_auth
-description[ru_RU]=описание test_domain_system_auth
+description[ru_RU]=Проверка метода аутентификации для работы машины в домене - test_domain_system_auth
 description[en_US]=description test_domain_system_auth
 
 [check_system_policy]
 name = check_system_policy
-name[ru_RU]=тест check_system_policy
+name[ru_RU]=Проверка check_system_policy
 name[en_US]=test check_system_policy
 description=desc check_system_policy
-description[ru_RU]=описание check_system_policy
+description[ru_RU]=Информация об инструменте применения групповых политик - check_system_policy
 description[en_US]=description check_system_policy
 
 [test_gpupdate_system_policy]
 name = test_gpupdate_system_policy
-name[ru_RU]=тест test_gpupdate_system_policy
+name[ru_RU]=Проверка test_gpupdate_system_policy
 name[en_US]=test test_gpupdate_system_policy
 description=desc test_gpupdate_system_policy
-description[ru_RU]=описание test_gpupdate_system_policy
+description[ru_RU]=Проверка применения групповых политик через gpupdate - test_gpupdate_system_policy
 description[en_US]=description test_gpupdate_system_policy
 
 [check_krb5_conf_exists]
 name = check_krb5_conf_exists
-name[ru_RU]=тест check_krb5_conf_exists
+name[ru_RU]=Проверка check_krb5_conf_exists
 name[en_US]=test check_krb5_conf_exists
 description=desc check_krb5_conf_exists
-description[ru_RU]=описание check_krb5_conf_exists
+description[ru_RU]=Информация о правах доступа в Kerberos и содержимом файла /etc/krb5.conf - check_krb5_conf_exists
 description[en_US]=description check_krb5_conf_exists
 
 [check_krb5_conf_ccache]
 name = check_hostnamectl
-name[ru_RU]=тест check_krb5_conf_ccache
+name[ru_RU]=Проверка check_krb5_conf_ccache
 name[en_US]=test check_krb5_conf_ccache
 description=desc check_krb5_conf_ccache
-description[ru_RU]=описание check_krb5_conf_ccache
+description[ru_RU]=Информация о текущем способе кеширования Kerberos билетов - check_krb5_conf_ccache
 description[en_US]=description check_krb5_conf_ccache
 
 [test_keyring_krb5_conf_ccache]
 name = test_keyring_krb5_conf_ccache
-name[ru_RU]=тест test_keyring_krb5_conf_ccache
+name[ru_RU]=Проверка test_keyring_krb5_conf_ccache
 name[en_US]=test test_keyring_krb5_conf_ccache
 description=desc test_keyring_krb5_conf_ccache
-description[ru_RU]=описание test_keyring_krb5_conf_ccache
+description[ru_RU]=Проверка настроенного способа кеширования Kerberos билетов - test_keyring_krb5_conf_ccache
 description[en_US]=description test_keyring_krb5_conf_ccache
 
 [check_krb5_conf_kdc_lookup]
 name = check_krb5_conf_kdc_lookup
-name[ru_RU]=тест check_krb5_conf_kdc_lookup
+name[ru_RU]=Проверка check_krb5_conf_kdc_lookup
 name[en_US]=test check_krb5_conf_kdc_lookup
 description=desc check_krb5_conf_kdc_lookup
-description[ru_RU]=описание check_krb5_conf_kdc_lookup
+description[ru_RU]=Проверка включения поиска Kerberos-имени домена через DNS - check_krb5_conf_kdc_lookup
 description[en_US]=description check_krb5_conf_kdc_lookup
 
 [check_krb5_keytab_exists]
 name = check_krb5_keytab_exists
-name[ru_RU]=тест check_krb5_keytab_exists
+name[ru_RU]=Проверка check_krb5_keytab_exists
 name[en_US]=test check_krb5_keytab_exists
 description=desc check_krb5_keytab_exists
-description[ru_RU]=описание check_krb5_keytab_exists
+description[ru_RU]=Информация о правах доступа и дате последного изменения файла /etc/krb5.keytab - check_krb5_keytab_exists
 description[en_US]=description check_krb5_keytab_exists
 
 [check_keytab_credential_list]
 name = check_keytab_credential_list
-name[ru_RU]=тест check_keytab_credential_list
+name[ru_RU]=Проверка check_keytab_credential_list
 name[en_US]=test check_keytab_credential_list
 description=desc check_keytab_credential_list
-description[ru_RU]=описание check_keytab_credential_list
+description[ru_RU]=Информация о правах доступа и дате последного изменения файла кеша Kerberos, в котором хранятся принципалы и хеши пароля доменной учётной записи пользователя, с которым ассоциирована та или иная служба в Linux - check_keytab_credential_list
 description[en_US]=description check_keytab_credential_list
 
 [check_resolv_conf]
 name = check_resolv_conf
-name[ru_RU]=тест check_resolv_conf
+name[ru_RU]=Проверка check_resolv_conf
 name[en_US]=test check_resolv_conf
 description=desc check_resolv_conf
-description[ru_RU]=описание check_resolv_conf
+description[ru_RU]=Проверка наличия домена для поиска - check_resolv_conf
 description[en_US]=description check_resolv_conf
 
 [compare_resolv_conf_with_default_realm]
 name = compare_resolv_conf_with_default_realm
-name[ru_RU]=тест compare_resolv_conf_with_default_realm
+name[ru_RU]=Проверка compare_resolv_conf_with_default_realm
 name[en_US]=test compare_resolv_conf_with_default_realm
 description=desc compare_resolv_conf_with_default_realm
-description[ru_RU]=описание compare_resolv_conf_with_default_realm
+description[ru_RU]=Проверка сопоставления домена для поиска и домена указанного для Kerberos - compare_resolv_conf_with_default_realm
 description[en_US]=description compare_resolv_conf_with_default_realm
 
 [check_smb_conf]
 name = check_smb_conf
-name[ru_RU]=тест check_smb_conf
+name[ru_RU]=Проверка check_smb_conf
 name[en_US]=test check_smb_conf
 description=desc check_smb_conf
-description[ru_RU]=описание check_smb_conf
+description[ru_RU]=Проверка файла настроек конфигурации Samba - check_smb_conf
 description[en_US]=description check_smb_conf
 
 [compare_smb_realm_with_krb5_default_realm]
 name = compare_smb_realm_with_krb5_default_realm
-name[ru_RU]=тест compare_smb_realm_with_krb5_default_realm
+name[ru_RU]=Проверка compare_smb_realm_with_krb5_default_realm
 name[en_US]=test compare_smb_realm_with_krb5_default_realm
 description=desc compare_smb_realm_with_krb5_default_realm
-description[ru_RU]=описание compare_smb_realm_with_krb5_default_realm
+description[ru_RU]=Проверка сопоставления домена, указанного для Samba и домена по умолчанию, указанного для Kerberos - compare_smb_realm_with_krb5_default_realm
 description[en_US]=description compare_smb_realm_with_krb5_default_realm
 
 [test_smb_realm]
 name = test_smb_realm
-name[ru_RU]=тест test_smb_realm
+name[ru_RU]=Проверка test_smb_realm
 name[en_US]=test test_smb_realm
 description=desc test_smb_realm
-description[ru_RU]=описание test_smb_realm
+description[ru_RU]=Проверка домена, указанного для Samba - test_smb_realm
 description[en_US]=description test_smb_realm
 
 [test_domainname]
 name = test_domainname
-name[ru_RU]=тест test_domainname
+name[ru_RU]=Проверка test_domainname
 name[en_US]=test test_domainname
 description=desc test_domainname
-description[ru_RU]=описание  test_domainname
+description[ru_RU]=Проверка соответствия доменного имени из /etc/hostname с доменным именем домена - test_domainname
 description[en_US]=description test_domainname
 
 [check_time_synchronization]
 name = check_time_synchronization
-name[ru_RU]=тест check_time_synchronization
+name[ru_RU]=Проверка check_time_synchronization
 name[en_US]=test check_time_synchronization
 description=desc check_time_synchronization
-description[ru_RU]=описание check_time_synchronization
+description[ru_RU]=Информация о часовом поясе, синхронизации времени с сервером - check_time_synchronization
 description[en_US]=description check_time_synchronization
 
 [test_time_synchronization]
 name = check_hostnamectl
-name[ru_RU]=тест test_time_synchronization
+name[ru_RU]=Проверка test_time_synchronization
 name[en_US]=test test_time_synchronization
 description=desc test_time_synchronization
-description[ru_RU]=описание test_time_synchronization
+description[ru_RU]=Проверка включения синхронизации времени - test_time_synchronization
 description[en_US]=description test_time_synchronization
 
 [check_nameservers]
 name = check_nameservers
-name[ru_RU]=тест check_nameservers
+name[ru_RU]=Проверка check_nameservers
 name[en_US]=test check_nameservers
 description=desc check_nameservers
-description[ru_RU]=описание check_nameservers
+description[ru_RU]=Проверка доступности всех контроллеров домена по имени (host <domain FQDN>) и ip-адресу(работает ли resolv.conf) - check_nameservers
 description[en_US]=description check_nameservers
 
 [check_domain_controllers]
 name = check_domain_controllers
-name[ru_RU]=тест check_domain_controllers
+name[ru_RU]=Проверка check_domain_controllers
 name[en_US]=test check_domain_controllers
 description=desc check_domain_controllers
-description[ru_RU]=описание check_domain_controllers
+description[ru_RU]=Проверка доступности всех контроллеров домена в домене (из srv записей). Отображает версии контроллеров домена (из ldap) - check_domain_controllers
 description[en_US]=description check_domain_controllers
 
 [check_kerberos_and_ldap_srv_records]
 name = check_kerberos_and_ldap_srv_records
-name[ru_RU]=тест check_kerberos_and_ldap_srv_records
+name[ru_RU]=Проверка check_kerberos_and_ldap_srv_records
 name[en_US]=test check_kerberos_and_ldap_srv_records
 description=desc check_kerberos_and_ldap_srv_records
-description[ru_RU]=описание check_kerberos_and_ldap_srv_records
+description[ru_RU]=Проверка наличия srv-записи Kerberos и LDAP для домена, а так же ldap-запроса - check_kerberos_and_ldap_srv_records
 description[en_US]=description check_kerberos_and_ldap_srv_records
 
 [compare_netbios_name]
 name = compare_netbios_name
-name[ru_RU]=тест compare_netbios_name
+name[ru_RU]=Проверка compare_netbios_name
 name[en_US]=test compare_netbios_name
 description=desc compare_netbios_name
-description[ru_RU]=описание compare_netbios_name
+description[ru_RU]=Сравнение префиксов имени компьютеров в Samba и указанного в /etc/hostname - compare_netbios_name
 description[en_US]=description compare_netbios_name
 
 [check_common_packages]
 name = check_common_packages
-name[ru_RU]=тест check_common_packages
+name[ru_RU]=Проверка check_common_packages
 name[en_US]=test check_common_packages
 description=desc check_common_packages
-description[ru_RU]=описание check_common_packages
+description[ru_RU]=Проверка наличия установленных основных пакетов для работы в домене - check_common_packages
 description[en_US]=description check_common_packages
 
 [check_group_policy_packages]
 name = check_group_policy_packages
-name[ru_RU]=тест check_group_policy_packages
+name[ru_RU]=Проверка check_group_policy_packages
 name[en_US]=test check_group_policy_packages
 description=desc check_group_policy_packages
-description[ru_RU]=описание check_group_policy_packages
+description[ru_RU]=Проверка наличия установленных основных пакетов и их версий для управления групповыми политиками - check_group_policy_packages
 description[en_US]=description check_group_policy_packages
 
 [check_sssd_ad_packages]
 name = check_sssd_ad_packages
-name[ru_RU]=тест check_sssd_ad_packages
+name[ru_RU]=Проверка check_sssd_ad_packages
 name[en_US]=test check_sssd_ad_packages
 description=desc check_sssd_ad_packages
-description[ru_RU]=описание check_sssd_ad_packages
+description[ru_RU]=Проверка наличия установленного мета-пакета и его версии для аутентификации c помощью sssd - check_sssd_ad_packages
 description[en_US]=description check_sssd_ad_packages
 
 [check_sssd_winbind_packages]
 name = check_sssd_winbind_packages
-name[ru_RU]=тест check_sssd_winbind_packages
+name[ru_RU]=Проверка check_sssd_winbind_packages
 name[en_US]=test check_sssd_winbind_packages
 description=desc check_sssd_winbind_packages
-description[ru_RU]=описание check_sssd_winbind_packages
+description[ru_RU]=Проверка наличия установленного мета-пакета и его версии для аутентификации c помощью winbind - check_sssd_winbind_packages
 description[en_US]=description check_sssd_winbind_packages
 
 
