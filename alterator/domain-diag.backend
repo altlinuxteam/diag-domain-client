@@ -1,24 +1,25 @@
-[Manager]
-module_name = executor
-node_name = domain_diag
-interface_name = diag1
+[Alterator Entry]
+Type = Backend
+Module = executor
+Name = domain_diag
+Interface = diag1
 
 [Info]
-execute = cat /usr/share/alterator/backends/domain-diag.desktop
+execute = cat /usr/share/alterator/objects/domain-diag/domain-diag.alterator
 stdout_bytes = enabled
 stdout_byte_limit = 200000
-action_id = info
+action_id = Info
 
 [Run]
 execute = domain-diag {param}
 stdout_signal_name = diag1_stdout_signal
 stderr_signal_name = diag1_stderr_signal
 thread_limit = 3
-action_id = run
+action_id = Run
 
 [List]
 execute = domain-diag -l
 stdout_strings = enabled
 stdout_strings_limit = 200000
-action_id = list
+action_id = List
 

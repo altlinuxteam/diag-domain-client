@@ -1,0 +1,233 @@
+[Alterator Entry]
+Type = diag1
+Name = domain_diag
+Name[ru_RU] = Диагностика домена
+Name[en_US] = Domain diagnostic tool
+Comment = diag_1 description
+Comment[ru_RU] = Описание диагностического теста1
+Comment[en_US] = Description diag test1
+Icon = system-run
+
+[check_hostnamectl]
+Name = check_hostnamectl
+Name[ru_RU] = Проверка check_hostnamectl
+Name[en_US] = Test check_hostnamectl
+Comment = desc check_hostnamectl
+Comment[ru_RU] = Информация о настройках хоста - check_hostnamectl
+Comment[en_US] = description check_hostnamectl
+
+[test_hostname]
+Name = test_hostname
+Name[ru_RU] = Проверка test_hostname
+Name[en_US] = test test_hostname
+Comment = desc test_hostname
+Comment[ru_RU] = Информация о полном именя хоста - test_hostname
+Comment[en_US] = description test_hostname
+
+[check_system_auth]
+Name = check_system_auth
+Name[ru_RU] = Проверка check_system_auth
+Name[en_US] = test check_system_auth
+Comment = desc check_system_auth
+Comment[ru_RU] = Информация о методе аутентификации компьютера в домене - check_system_auth
+Comment[en_US] = description check_system_auth
+
+[test_domain_system_auth]
+Name = test_domain_system_auth
+Name[ru_RU] = Проверка test_domain_system_auth
+Name[en_US] = test test_domain_system_auth
+Comment = desc test_domain_system_auth
+Comment[ru_RU] = Проверка метода аутентификации для работы машины в домене - test_domain_system_auth
+Comment[en_US] = description test_domain_system_auth
+
+[check_system_policy]
+Name = check_system_policy
+Name[ru_RU] = Проверка check_system_policy
+Name[en_US] = test check_system_policy
+Comment = desc check_system_policy
+Comment[ru_RU] = Информация об инструменте применения групповых политик - check_system_policy
+Comment[en_US] = description check_system_policy
+
+[test_gpupdate_system_policy]
+Name = test_gpupdate_system_policy
+Name[ru_RU] = Проверка test_gpupdate_system_policy
+Name[en_US] = test test_gpupdate_system_policy
+Comment = desc test_gpupdate_system_policy
+Comment[ru_RU] = Проверка применения групповых политик через gpupdate - test_gpupdate_system_policy
+Comment[en_US] = description test_gpupdate_system_policy
+
+[check_krb5_conf_exists]
+Name = check_krb5_conf_exists
+Name[ru_RU] = Проверка check_krb5_conf_exists
+Name[en_US] = test check_krb5_conf_exists
+Comment = desc check_krb5_conf_exists
+Comment[ru_RU] = Информация о правах доступа в Kerberos и содержимом файла /etc/krb5.conf - check_krb5_conf_exists
+Comment[en_US] = description check_krb5_conf_exists
+
+[check_krb5_conf_ccache]
+Name = check_hostnamectl
+Name[ru_RU] = Проверка check_krb5_conf_ccache
+Name[en_US] = test check_krb5_conf_ccache
+Comment = desc check_krb5_conf_ccache
+Comment[ru_RU] = Информация о текущем способе кеширования Kerberos билетов - check_krb5_conf_ccache
+Comment[en_US] = description check_krb5_conf_ccache
+
+[test_keyring_krb5_conf_ccache]
+Name = test_keyring_krb5_conf_ccache
+Name[ru_RU] = Проверка test_keyring_krb5_conf_ccache
+Name[en_US] = test test_keyring_krb5_conf_ccache
+Comment = desc test_keyring_krb5_conf_ccache
+Comment[ru_RU] = Проверка настроенного способа кеширования Kerberos билетов - test_keyring_krb5_conf_ccache
+Comment[en_US] = description test_keyring_krb5_conf_ccache
+
+[check_krb5_conf_kdc_lookup]
+Name = check_krb5_conf_kdc_lookup
+Name[ru_RU] = Проверка check_krb5_conf_kdc_lookup
+Name[en_US] = test check_krb5_conf_kdc_lookup
+Comment = desc check_krb5_conf_kdc_lookup
+Comment[ru_RU] = Проверка включения поиска Kerberos-имени домена через DNS - check_krb5_conf_kdc_lookup
+Comment[en_US] = description check_krb5_conf_kdc_lookup
+
+[check_krb5_keytab_exists]
+Name = check_krb5_keytab_exists
+Name[ru_RU] = Проверка check_krb5_keytab_exists
+Name[en_US] = test check_krb5_keytab_exists
+Comment = desc check_krb5_keytab_exists
+Comment[ru_RU] = Информация о правах доступа и дате последного изменения файла /etc/krb5.keytab - check_krb5_keytab_exists
+Comment[en_US] = description check_krb5_keytab_exists
+
+[check_keytab_credential_list]
+Name = check_keytab_credential_list
+Name[ru_RU] = Проверка check_keytab_credential_list
+Name[en_US] = test check_keytab_credential_list
+Comment = desc check_keytab_credential_list
+Comment[ru_RU] = Информация о правах доступа и дате последного изменения файла кеша Kerberos, в котором хранятся принципалы и хеши пароля доменной учётной записи пользователя, с которым ассоциирована та или иная служба в Linux - check_keytab_credential_list
+Comment[en_US] = description check_keytab_credential_list
+
+[check_resolv_conf]
+Name = check_resolv_conf
+Name[ru_RU] = Проверка check_resolv_conf
+Name[en_US] = test check_resolv_conf
+Comment = desc check_resolv_conf
+Comment[ru_RU] = Проверка наличия домена для поиска - check_resolv_conf
+Comment[en_US] = description check_resolv_conf
+
+[compare_resolv_conf_with_default_realm]
+Name = compare_resolv_conf_with_default_realm
+Name[ru_RU] = Проверка compare_resolv_conf_with_default_realm
+Name[en_US] = test compare_resolv_conf_with_default_realm
+Comment = desc compare_resolv_conf_with_default_realm
+Comment[ru_RU] = Проверка сопоставления домена для поиска и домена указанного для Kerberos - compare_resolv_conf_with_default_realm
+Comment[en_US] = description compare_resolv_conf_with_default_realm
+
+[check_smb_conf]
+Name = check_smb_conf
+Name[ru_RU] = Проверка check_smb_conf
+Name[en_US] = test check_smb_conf
+Comment = desc check_smb_conf
+Comment[ru_RU] = Проверка файла настроек конфигурации Samba - check_smb_conf
+Comment[en_US] = description check_smb_conf
+
+[compare_smb_realm_with_krb5_default_realm]
+Name = compare_smb_realm_with_krb5_default_realm
+Name[ru_RU] = Проверка compare_smb_realm_with_krb5_default_realm
+Name[en_US] = test compare_smb_realm_with_krb5_default_realm
+Comment = desc compare_smb_realm_with_krb5_default_realm
+Comment[ru_RU] = Проверка сопоставления домена, указанного для Samba и домена по умолчанию, указанного для Kerberos - compare_smb_realm_with_krb5_default_realm
+Comment[en_US] = description compare_smb_realm_with_krb5_default_realm
+
+[test_smb_realm]
+Name = test_smb_realm
+Name[ru_RU] = Проверка test_smb_realm
+Name[en_US] = test test_smb_realm
+Comment = desc test_smb_realm
+Comment[ru_RU] = Проверка домена, указанного для Samba - test_smb_realm
+Comment[en_US] = description test_smb_realm
+
+[test_domainname]
+Name = test_domainname
+Name[ru_RU] = Проверка test_domainname
+Name[en_US] = test test_domainname
+Comment = desc test_domainname
+Comment[ru_RU] = Проверка соответствия доменного имени из /etc/hostname с доменным именем домена - test_domainname
+Comment[en_US] = description test_domainname
+
+[check_time_synchronization]
+Name = check_time_synchronization
+Name[ru_RU] = Проверка check_time_synchronization
+Name[en_US] = test check_time_synchronization
+Comment = desc check_time_synchronization
+Comment[ru_RU] = Информация о часовом поясе, синхронизации времени с сервером - check_time_synchronization
+Comment[en_US] = description check_time_synchronization
+
+[test_time_synchronization]
+Name = check_hostnamectl
+Name[ru_RU] = Проверка test_time_synchronization
+Name[en_US] = test test_time_synchronization
+Comment = desc test_time_synchronization
+Comment[ru_RU] = Проверка включения синхронизации времени - test_time_synchronization
+Comment[en_US] = description test_time_synchronization
+
+[check_nameservers]
+Name = check_nameservers
+Name[ru_RU] = Проверка check_nameservers
+Name[en_US] = test check_nameservers
+Comment = desc check_nameservers
+Comment[ru_RU] = Проверка доступности всех контроллеров домена по имени (host <domain FQDN>) и ip-адресу(работает ли resolv.conf) - check_nameservers
+Comment[en_US] = description check_nameservers
+
+[check_domain_controllers]
+Name = check_domain_controllers
+Name[ru_RU] = Проверка check_domain_controllers
+Name[en_US] = test check_domain_controllers
+Comment = desc check_domain_controllers
+Comment[ru_RU] = Проверка доступности всех контроллеров домена в домене (из srv записей). Отображает версии контроллеров домена (из ldap) - check_domain_controllers
+Comment[en_US] = description check_domain_controllers
+
+[check_kerberos_and_ldap_srv_records]
+Name = check_kerberos_and_ldap_srv_records
+Name[ru_RU] = Проверка check_kerberos_and_ldap_srv_records
+Name[en_US] = test check_kerberos_and_ldap_srv_records
+Comment = desc check_kerberos_and_ldap_srv_records
+Comment[ru_RU] = Проверка наличия srv-записи Kerberos и LDAP для домена, а так же ldap-запроса - check_kerberos_and_ldap_srv_records
+Comment[en_US] = description check_kerberos_and_ldap_srv_records
+
+[compare_netbios_name]
+Name = compare_netbios_name
+Name[ru_RU] = Проверка compare_netbios_name
+Name[en_US] = test compare_netbios_name
+Comment = desc compare_netbios_name
+Comment[ru_RU] = Сравнение префиксов имени компьютеров в Samba и указанного в /etc/hostname - compare_netbios_name
+Comment[en_US] = description compare_netbios_name
+
+[check_common_packages]
+Name = check_common_packages
+Name[ru_RU] = Проверка check_common_packages
+Name[en_US] = test check_common_packages
+Comment = desc check_common_packages
+Comment[ru_RU] = Проверка наличия установленных основных пакетов для работы в домене - check_common_packages
+Comment[en_US] = description check_common_packages
+
+[check_group_policy_packages]
+Name = check_group_policy_packages
+Name[ru_RU] = Проверка check_group_policy_packages
+Name[en_US] = test check_group_policy_packages
+Comment = desc check_group_policy_packages
+Comment[ru_RU] = Проверка наличия установленных основных пакетов и их версий для управления групповыми политиками - check_group_policy_packages
+Comment[en_US] = description check_group_policy_packages
+
+[check_sssd_ad_packages]
+Name = check_sssd_ad_packages
+Name[ru_RU] = Проверка check_sssd_ad_packages
+Name[en_US] = test check_sssd_ad_packages
+Comment = desc check_sssd_ad_packages
+Comment[ru_RU] = Проверка наличия установленного мета-пакета и его версии для аутентификации c помощью sssd - check_sssd_ad_packages
+Comment[en_US] = description check_sssd_ad_packages
+
+[check_sssd_winbind_packages]
+Name = check_sssd_winbind_packages
+Name[ru_RU] = Проверка check_sssd_winbind_packages
+Name[en_US] = test check_sssd_winbind_packages
+Comment = desc check_sssd_winbind_packages
+Comment[ru_RU] = Проверка наличия установленного мета-пакета и его версии для аутентификации c помощью winbind - check_sssd_winbind_packages
+Comment[en_US] = description check_sssd_winbind_packages
