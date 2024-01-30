@@ -1,5 +1,5 @@
 Name: domain-diag
-Version: 0.2.6
+Version: 0.2.7
 Release: alt1
 
 Summary: Active Directory domain environment diagnostic tool
@@ -7,7 +7,7 @@ License: GPLv3
 Group: System/Configuration/Other
 BuildArch: noarch
 
-Url: https://gitea.basealt.ru/saratov/domain-diag
+Url: https://gitea.basealt.ru/saratov/alterator-diag-domain-client
 
 Source: %name-%version.tar
 
@@ -40,6 +40,10 @@ shellcheck -e SC1090,SC1091,SC2004,SC2015,SC2034,SC2086,SC2154,SC2001,SC2120,SC2
 %_alterator_datadir/objects/%name/%name.*
 
 %changelog
+* Tue Jan 30 2024 Andrey Limachko <liannnix@altlinux.org> 0.2.7-alt1
+- Fix to work with new alterator version (thx Michael Chernigin)
+- Fix description to diagnostic tests in ADT domain-diag (thx Anton Abramov)
+
 * Tue Oct 17 2023 Andrey Limachko <liannnix@altlinux.org> 0.2.6-alt1
 - chore: change methods names to alterator-manager interface
   0.1.8-alt1 (thx Aleksey Saprunov)
