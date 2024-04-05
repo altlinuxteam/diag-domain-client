@@ -7,7 +7,7 @@ DisplayName[en_US] = Diagnosis of client status as part of a domain
 Comment = Diagnostic of client state in the domain
 Comment[ru_RU] = Диагностика состояния клиента в составе домена
 Comment[en_US] = Diagnostic of client state in the domain
-Icon = system-run
+Icon = domain-diag
 ReportSuffix = txt
 
 [check_hostnamectl]
