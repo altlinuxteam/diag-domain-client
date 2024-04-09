@@ -7,20 +7,20 @@ thread_limit = 200000
 
 
 [Info]
-execute = cat /usr/share/alterator/diagnostictools/domain-diag/domain-diag.diagnostictool
+execute = cat /usr/share/alterator/diagnostictools/diag-domain-client/diag-domain-client.diagnostictool
 stdout_bytes = enabled
 stdout_byte_limit = 200000
 action_id = Info
 
 [Run]
-execute = domain-diag {param}
+execute = diag-domain-client {param}
 stdout_signal_name = diag1_stdout_signal
 stderr_signal_name = diag1_stderr_signal
 thread_limit = 3
 action_id = Run
 
 [List]
-execute = domain-diag -l
+execute = diag-domain-client -l
 stdout_strings = enabled
 stdout_strings_limit = 200000
 action_id = List

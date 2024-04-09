@@ -1,4 +1,4 @@
-Name: domain-diag
+Name: diag-domain-client
 Version: 0.2.7
 Release: alt1
 
@@ -7,12 +7,15 @@ License: GPLv3
 Group: System/Configuration/Other
 BuildArch: noarch
 
-Url: https://gitea.basealt.ru/saratov/alterator-diag-domain-client
+Url: https://gitea.basealt.ru/saratov/diag-domain-client
 
 Source: %name-%version.tar
 
 BuildRequires(pre): rpm-macros-alterator
 BuildRequires: shellcheck
+
+Obsoletes: domain-diag < %EVR
+Provides: diag-domain-client = %EVR
 
 %description
 Active Directory domain environment diagnostic tool.
@@ -27,7 +30,7 @@ sed -i 's/@VERSION@/%version/g' %name.man
 %install
 install -p -D -m755 %name %buildroot%_bindir/%name
 install -p -D %name.man %buildroot%_mandir/man1/%name.1
-install -p -D alterator/%name.ru.basealt.alterator.backend    %buildroot%_alterator_datadir/backends/%name.ru.basealt.alterator.backend
+install -p -D alterator/%name.ru.basealt.alterator.backend %buildroot%_alterator_datadir/backends/%name.ru.basealt.alterator.backend
 install -p -D alterator/%name.diagnostictool %buildroot%_alterator_datadir/diagnostictools/%name/%name.diagnostictool
 install -p -D %name.svg %buildroot%_iconsdir/hicolor/scalable/apps/%name.svg
 
