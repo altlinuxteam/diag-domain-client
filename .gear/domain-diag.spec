@@ -1,4 +1,6 @@
-Name: diag-domain-client
+%define _unpackaged_files_terminate_build 1
+%define diagnostic_tool domain-client
+Name: diag-%diagnostic_tool
 Version: 0.2.7
 Release: alt1
 
@@ -15,7 +17,6 @@ BuildRequires(pre): rpm-macros-alterator
 BuildRequires: shellcheck
 
 Obsoletes: domain-diag < %EVR
-Provides: diag-domain-client = %EVR
 
 %description
 Active Directory domain environment diagnostic tool.
@@ -30,8 +31,8 @@ sed -i 's/@VERSION@/%version/g' %name.man
 %install
 install -p -D -m755 %name %buildroot%_bindir/%name
 install -p -D %name.man %buildroot%_mandir/man1/%name.1
-install -p -D alterator/%name.ru.basealt.alterator.backend %buildroot%_alterator_datadir/backends/%name.ru.basealt.alterator.backend
-install -p -D alterator/%name.diagnostictool %buildroot%_alterator_datadir/diagnostictools/%name/%name.diagnostictool
+install -p -D alterator/%name.backend %buildroot%_alterator_datadir/backends/%name.backend
+install -p -D alterator/%diagnostic_tool.diag %buildroot%_alterator_datadir/diagnostictools/%diagnostic_tool.diag
 install -p -D %name.svg %buildroot%_iconsdir/hicolor/scalable/apps/%name.svg
 
 %check
@@ -39,9 +40,9 @@ shellcheck -e SC1090,SC1091,SC2004,SC2015,SC2034,SC2086,SC2154,SC2001,SC2120,SC2
 
 %files
 %_bindir/%name
-%_mandir/man1/%name.*
-%_alterator_datadir/backends/%name.*
-%_alterator_datadir/diagnostictools/%name/%name.*
+%_man1dir/%name.*
+%_alterator_datadir/backends/%name.backend
+%_alterator_datadir/diagnostictools/%diagnostic_tool.diag
 %_iconsdir/hicolor/scalable/apps/%name.svg
 
 %changelog
