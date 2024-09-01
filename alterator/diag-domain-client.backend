@@ -1,10 +1,8 @@
 [Alterator Entry]
 Type = Backend
 Module = executor
-Interface = ru.basealt.alterator.diag1
+Interface = diag1
 Name = diag_domain_client
-thread_limit = 200000
-
 
 [Info]
 execute = cat /usr/share/alterator/diagnostictools/domain-client.diag
