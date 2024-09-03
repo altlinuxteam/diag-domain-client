@@ -11,7 +11,7 @@ stdout_byte_limit = 200000
 action_id = Info
 
 [Run]
-execute = diag-domain-client {param}
+execute = diag-domain-client -v {param}
 stdout_signal_name = diag1_stdout_signal
 stderr_signal_name = diag1_stderr_signal
 thread_limit = 3
