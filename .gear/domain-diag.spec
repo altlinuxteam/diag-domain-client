@@ -3,7 +3,7 @@
 
 Name: diag-%diagnostic_tool
 Version: 0.2.8
-Release: alt1
+Release: alt2
 
 Summary: Active Directory domain environment diagnostic tool
 License: GPLv3
@@ -52,6 +52,9 @@ shellcheck -e SC1090,SC1091,SC2004,SC2015,SC2034,SC2086,SC2154,SC2001,SC2120,SC2
 %_iconsdir/hicolor/scalable/apps/%name.svg
 
 %changelog
+* Fri Sep 27 2024 Michael Shigorin <mike@altlinux.org> 0.2.8-alt2
+- E2K: avoid shellcheck due to ghc still lacking
+
 * Mon Sep 02 2024 Evgeny Sinelnikov <sin@altlinux.org> 0.2.8-alt1
 - Initial build for Sisyphus
 
