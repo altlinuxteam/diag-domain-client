@@ -18,6 +18,8 @@ BuildArch: noarch
 BuildRequires(pre): rpm-macros-alterator
 %ifnarch %e2k
 BuildRequires: shellcheck
+%ifarch x86_64
+BuildRequires: alterator-entry
 %endif
 
 Obsoletes: domain-diag < %EVR
@@ -42,6 +44,8 @@ install -p -D %name.svg %buildroot%_iconsdir/hicolor/scalable/apps/%name.svg
 %check
 %ifnarch %e2k
 shellcheck -e SC1090,SC1091,SC2004,SC2015,SC2034,SC2086,SC2154,SC2001,SC2120,SC2119,SC2317 %name
+%ifarch x86_64
+find ./alterator/ -type f -exec alterator-entry --verbose {} \+
 %endif
 
 %files
