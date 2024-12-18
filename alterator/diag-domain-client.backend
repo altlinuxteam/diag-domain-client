@@ -1,29 +1,28 @@
-[Alterator Entry]
-Type = Backend
-Module = executor
-Interface = diag1
-Name = diag_domain_client
+type = "Backend"
+module = "executor"
+interface = "diag1"
+name = "diag_domain_client"
 
-[Info]
-execute = cat /usr/share/alterator/diagnostictools/domain-client.diag
-stdout_bytes = enabled
+[methods.Info]
+execute = "cat /usr/share/alterator/diagnostictools/domain-client.diag"
+stdout_bytes = true
 stdout_byte_limit = 200000
-action_id = Info
+action_id = "Info"
 
-[Run]
-execute = diag-domain-client -v {param}
-stdout_signal_name = diag1_stdout_signal
-stderr_signal_name = diag1_stderr_signal
+[methods.Run]
+execute = "diag-domain-client -v {param}"
+stdout_signal_name = "diag1_stdout_signal"
+stderr_signal_name = "diag1_stderr_signal"
 thread_limit = 3
-action_id = Run
+action_id = "Run"
 
-[List]
-execute = diag-domain-client -l
-stdout_strings = enabled
+[methods.List]
+execute = "diag-domain-client -l"
+stdout_strings = true
 stdout_strings_limit = 200000
-action_id = List
+action_id = "List"
 
-[Report]
-execute = echo "empty"
-stdout_bytes = enabled
-action_id = Report
+[methods.Report]
+execute = "echo empty"
+stdout_bytes = true
+action_id = "Report"
