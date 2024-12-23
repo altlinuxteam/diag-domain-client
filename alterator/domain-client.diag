@@ -1,176 +1,176 @@
 name = "diag_domain_client"
 type = "Diag"
-displayName.ru = "Диагностика клиента домена"
-displayName.en = "Diagnosis of client status as part of a domain"
+display_name.ru = "Диагностика клиента домена"
+display_name.en = "Diagnosis of client status as part of a domain"
 comment.ru = "Диагностика состояния клиента в составе домена"
 comment.en = "Diagnostic of client state in the domain"
 icon = "diag-domain-client"
 reportSuffix = "txt"
 
 [tests.check_hostnamectl]
-displayName.ru = "Информация о настройках хоста"
-displayName.en = "Host Allocation Information"
+display_name.ru = "Информация о настройках хоста"
+display_name.en = "Host Allocation Information"
 comment.ru = "Информация о настройках хоста - check_hostnamectl"
 comment.en = "description check_hostnamectl"
 
 [tests.test_hostname]
-displayName.ru = "Проверка полного имени хоста"
-displayName.en = "Fullname host information"
+display_name.ru = "Проверка полного имени хоста"
+display_name.en = "Fullname host information"
 comment.ru = "Информация о полном именя хоста - test_hostname"
 comment.en = "description test_hostname"
 
 [tests.check_system_auth]
-displayName.ru = "Информация о методе аутентификации компьютера в домене"
-displayName.en = "Information about the computer authentication method in the domain"
+display_name.ru = "Информация о методе аутентификации компьютера в домене"
+display_name.en = "Information about the computer authentication method in the domain"
 comment.ru = "Информация о методе аутентификации компьютера в домене - check_system_auth"
 comment.en = "description check_system_auth"
 
 [tests.test_domain_system_auth]
-displayName.ru = "Проверка метода аутентификации для работы машины в домене"
-displayName.en = "Checking the authentication method for running a machine in a domain"
+display_name.ru = "Проверка метода аутентификации для работы машины в домене"
+display_name.en = "Checking the authentication method for running a machine in a domain"
 comment.ru = "Проверка метода аутентификации для работы машины в домене - test_domain_system_auth"
 comment.en = "description test_domain_system_auth"
 
 [tests.check_system_policy]
-displayName.ru = "Информация об инструменте применения групповых политик"
-displayName.en = "Information about the Group Policy Enforcement Tool"
+display_name.ru = "Информация об инструменте применения групповых политик"
+display_name.en = "Information about the Group Policy Enforcement Tool"
 comment.ru = "Информация об инструменте применения групповых политик - check_system_policy"
 comment.en = "description check_system_policy"
 
 [tests.test_gpupdate_system_policy]
-displayName.ru = "Проверка применения групповых политик через gpupdate"
-displayName.en = "Checking the application of group policies via gpupdate"
+display_name.ru = "Проверка применения групповых политик через gpupdate"
+display_name.en = "Checking the application of group policies via gpupdate"
 comment.ru = "Проверка применения групповых политик через gpupdate - test_gpupdate_system_policy"
 comment.en = "description test_gpupdate_system_policy"
 
 [tests.check_krb5_conf_exists]
-displayName.ru = "Информация о правах доступа в Kerberos и содержимом файла /etc/krb5.conf"
-displayName.en = "Information about Kerberos permissions and the contents of the /etc/krb5.conf file"
+display_name.ru = "Информация о правах доступа в Kerberos и содержимом файла /etc/krb5.conf"
+display_name.en = "Information about Kerberos permissions and the contents of the /etc/krb5.conf file"
 comment.ru = "Информация о правах доступа в Kerberos и содержимом файла /etc/krb5.conf - check_krb5_conf_exists"
 comment.en = "description check_krb5_conf_exists"
 
 [tests.check_krb5_conf_ccache]
-displayName.ru = "Информация о текущем способе кеширования Kerberos билетов"
-displayName.en = "Information about the modern way to cache Kerberos tickets"
+display_name.ru = "Информация о текущем способе кеширования Kerberos билетов"
+display_name.en = "Information about the modern way to cache Kerberos tickets"
 comment.ru = "Информация о текущем способе кеширования Kerberos билетов - check_krb5_conf_ccache"
 comment.en = "description check_krb5_conf_ccache"
 
 [tests.test_keyring_krb5_conf_ccache]
-displayName.ru = "Проверка настроенного способа кеширования Kerberos билетов"
-displayName.en = "Verifying the configured Kerberos ticket cache path"
+display_name.ru = "Проверка настроенного способа кеширования Kerberos билетов"
+display_name.en = "Verifying the configured Kerberos ticket cache path"
 comment.ru = "Проверка настроенного способа кеширования Kerberos билетов - test_keyring_krb5_conf_ccache"
 comment.en = "description test_keyring_krb5_conf_ccache"
 
 [tests.check_krb5_conf_kdc_lookup]
-displayName.ru = "Проверка включения поиска Kerberos-имени домена через DNS"
-displayName.en = "Checking Kerberos domain name lookup via DNS enablement"
+display_name.ru = "Проверка включения поиска Kerberos-имени домена через DNS"
+display_name.en = "Checking Kerberos domain name lookup via DNS enablement"
 comment.ru = "Проверка включения поиска Kerberos-имени домена через DNS - check_krb5_conf_kdc_lookup"
 comment.en = "description check_krb5_conf_kdc_lookup"
 
 [tests.check_krb5_keytab_exists]
-displayName.ru = "Информация о правах доступа и дате последного изменения файла /etc/krb5.keytab"
-displayName.en = "Permission information and date of last modification of the /etc/krb5.keytab file"
+display_name.ru = "Информация о правах доступа и дате последного изменения файла /etc/krb5.keytab"
+display_name.en = "Permission information and date of last modification of the /etc/krb5.keytab file"
 comment.ru = "Информация о правах доступа и дате последного изменения файла /etc/krb5.keytab - check_krb5_keytab_exists"
 comment.en = "description check_krb5_keytab_exists"
 
 [tests.check_keytab_credential_list]
-displayName.ru = "Информация о правах доступа и последнем изменении кеша Kerberos с реквизитами пользователя"
-displayName.en = "Information about access rights and the last modification date of the Kerberos cache file, in which the principles and hashes are fixed for the domain user account that is the associated service in Linux"
+display_name.ru = "Информация о правах доступа и последнем изменении кеша Kerberos с реквизитами пользователя"
+display_name.en = "Information about access rights and the last modification date of the Kerberos cache file, in which the principles and hashes are fixed for the domain user account that is the associated service in Linux"
 comment.ru = "Информация о правах доступа и дате последного изменения файла кеша Kerberos, в котором хранятся принципалы и хеши пароля доменной учётной записи пользователя, с которым ассоциирована та или иная служба в Linux - check_keytab_credential_list"
 comment.en = "description check_keytab_credential_list"
 
 [tests.check_resolv_conf]
-displayName.ru = "Проверка наличия домена для поиска"
-displayName.en = "Checking domain registration for selection"
+display_name.ru = "Проверка наличия домена для поиска"
+display_name.en = "Checking domain registration for selection"
 comment.ru = "Проверка наличия домена для поиска - check_resolv_conf"
 comment.en = "description check_resolv_conf"
 
 [tests.compare_resolv_conf_with_default_realm]
-displayName.ru = "Проверка сопоставления домена для поиска и домена указанного для Kerberos"
-displayName.en = "Checking the parliament domain for search and the domain specified for Kerberos"
+display_name.ru = "Проверка сопоставления домена для поиска и домена указанного для Kerberos"
+display_name.en = "Checking the parliament domain for search and the domain specified for Kerberos"
 comment.ru = "Проверка сопоставления домена для поиска и домена указанного для Kerberos - compare_resolv_conf_with_default_realm"
 comment.en = "description compare_resolv_conf_with_default_realm"
 
 [tests.check_smb_conf]
-displayName.ru = "Проверка файла настроек конфигурации Samba"
-displayName.en = "Checking Samba Configuration Files"
+display_name.ru = "Проверка файла настроек конфигурации Samba"
+display_name.en = "Checking Samba Configuration Files"
 comment.ru = "Проверка файла настроек конфигурации Samba - check_smb_conf"
 comment.en = "description check_smb_conf"
 
 [tests.compare_smb_realm_with_krb5_default_realm]
-displayName.ru = "Проверка сопоставления домена, указанного для Samba и домена, указанного для Kerberos"
-displayName.en = "Checking the parliament domain displayed for Samba and the default domain displayed for Kerberos"
+display_name.ru = "Проверка сопоставления домена, указанного для Samba и домена, указанного для Kerberos"
+display_name.en = "Checking the parliament domain displayed for Samba and the default domain displayed for Kerberos"
 comment.ru = "Проверка сопоставления домена, указанного для Samba и домена по умолчанию, указанного для Kerberos - compare_smb_realm_with_krb5_default_realm"
 comment.en = "description compare_smb_realm_with_krb5_default_realm"
 
 [tests.test_smb_realm]
-displayName.ru = "Проверка домена, указанного для Samba"
-displayName.en = "Checking the domain displayed for Samba"
+display_name.ru = "Проверка домена, указанного для Samba"
+display_name.en = "Checking the domain displayed for Samba"
 comment.ru = "Проверка домена, указанного для Samba - test_smb_realm"
 comment.en = "description test_smb_realm"
 
 [tests.test_domainname]
-displayName.ru = "Проверка соответствия доменного имени из /etc/hostname с доменным именем домена"
-displayName.en = "Checking whether the domain name from /etc/hostname matches the domain name of the domain"
+display_name.ru = "Проверка соответствия доменного имени из /etc/hostname с доменным именем домена"
+display_name.en = "Checking whether the domain name from /etc/hostname matches the domain name of the domain"
 comment.ru = "Проверка соответствия доменного имени из /etc/hostname с доменным именем домена - test_domainname"
 comment.en = "description test_domainname"
 
 [tests.check_time_synchronization]
-displayName.ru = "Информация о часовом поясе, синхронизации времени с сервером"
-displayName.en = "Time zone information, time synchronization with server"
+display_name.ru = "Информация о часовом поясе, синхронизации времени с сервером"
+display_name.en = "Time zone information, time synchronization with server"
 comment.ru = "Информация о часовом поясе, синхронизации времени с сервером - check_time_synchronization"
 comment.en = "description check_time_synchronization"
 
 [tests.test_time_synchronization]
-displayName.ru = "Проверка включения синхронизации времени"
-displayName.en = "Checking whether time synchronization is enabled"
+display_name.ru = "Проверка включения синхронизации времени"
+display_name.en = "Checking whether time synchronization is enabled"
 comment.ru = "Проверка включения синхронизации времени - test_time_synchronization"
 comment.en = "description test_time_synchronization"
 
 [tests.check_nameservers]
-displayName.ru = "Проверка доступности всех контроллеров домена по имени (host <domain FQDN>) и ip-адресу(работает ли resolv.conf)"
-displayName.en = "Checking the availability of all domain controllers by name (host <domain FQDN>) and IP address (is resolv.conf working)"
+display_name.ru = "Проверка доступности всех контроллеров домена по имени (host <domain FQDN>) и ip-адресу(работает ли resolv.conf)"
+display_name.en = "Checking the availability of all domain controllers by name (host <domain FQDN>) and IP address (is resolv.conf working)"
 comment.ru = "Проверка доступности всех контроллеров домена по имени (host <domain FQDN>) и ip-адресу(работает ли resolv.conf) - check_nameservers"
 comment.en = "description check_nameservers"
 
 [tests.check_domain_controllers]
-displayName.ru = "Проверка доступности всех контроллеров домена в домене (из srv записей). Отображает версии контроллеров домена (из ldap)"
-displayName.en = "Checking the availability of all domain controllers in the domain (from srv records). Displays the version of domain controllers (from ldap)"
+display_name.ru = "Проверка доступности всех контроллеров домена в домене (из srv записей). Отображает версии контроллеров домена (из ldap)"
+display_name.en = "Checking the availability of all domain controllers in the domain (from srv records). Displays the version of domain controllers (from ldap)"
 comment.ru = "Проверка доступности всех контроллеров домена в домене (из srv записей). Отображает версии контроллеров домена (из ldap) - check_domain_controllers"
 comment.en = "description check_domain_controllers"
 
 [tests.check_kerberos_and_ldap_srv_records]
-displayName.ru = "Проверка наличия srv-записи Kerberos и LDAP для домена, а так же ldap-запроса"
-displayName.en = "Checking the registration of Kerberos and LDAP srv records for the domain, as well as the ldap request"
+display_name.ru = "Проверка наличия srv-записи Kerberos и LDAP для домена, а так же ldap-запроса"
+display_name.en = "Checking the registration of Kerberos and LDAP srv records for the domain, as well as the ldap request"
 comment.ru = "Проверка наличия srv-записи Kerberos и LDAP для домена, а так же ldap-запроса - check_kerberos_and_ldap_srv_records"
 comment.en = "description check_kerberos_and_ldap_srv_records"
 
 [tests.compare_netbios_name]
-displayName.ru = "Сравнение префиксов имени компьютеров в Samba и указанного в /etc/hostname"
-displayName.en = "Comparison of computer name prefixes in Samba and those specified in /etc/hostname"
+display_name.ru = "Сравнение префиксов имени компьютеров в Samba и указанного в /etc/hostname"
+display_name.en = "Comparison of computer name prefixes in Samba and those specified in /etc/hostname"
 comment.ru = "Сравнение префиксов имени компьютеров в Samba и указанного в /etc/hostname - compare_netbios_name"
 comment.en = "description compare_netbios_name"
 
 [tests.check_common_packages]
-displayName.ru = "Проверка наличия основных пакетов для работы в домене"
-displayName.en = "Checking the presence of a main package for working in a domain"
+display_name.ru = "Проверка наличия основных пакетов для работы в домене"
+display_name.en = "Checking the presence of a main package for working in a domain"
 comment.ru = "Проверка наличия основных пакетов для работы в домене - check_common_packages"
 comment.en = "description check_common_packages"
 
 [tests.check_group_policy_packages]
-displayName.ru = "Проверка наличия пакетов, необходимых для управления групповыми политиками"
-displayName.en = "Checking the availability of core packages and their use for managing group policies."
+display_name.ru = "Проверка наличия пакетов, необходимых для управления групповыми политиками"
+display_name.en = "Checking the availability of core packages and their use for managing group policies."
 comment.ru = "Проверка наличия основных пакетов и их версий для управления групповыми политиками - check_group_policy_packages"
 comment.en = "description check_group_policy_packages"
 
 [tests.check_sssd_ad_packages]
-displayName.ru = "Проверка наличия  мета-пакета для sssd-аутентификации"
-displayName.en = "Checking the authenticity of the installed meta package and its version for authentication using sssd"
+display_name.ru = "Проверка наличия  мета-пакета для sssd-аутентификации"
+display_name.en = "Checking the authenticity of the installed meta package and its version for authentication using sssd"
 comment.ru = "Проверка наличия мета-пакета и его версии для аутентификации c помощью sssd - check_sssd_ad_packages"
 comment.en = "description check_sssd_ad_packages"
 
 [tests.check_sssd_winbind_packages]
-displayName.ru = "Проверка наличия мета-пакета для winbind-аутентификации"
-displayName.en = "Checking the authenticity of the installed meta package and its version for authentication using winbind"
+display_name.ru = "Проверка наличия мета-пакета для winbind-аутентификации"
+display_name.en = "Checking the authenticity of the installed meta package and its version for authentication using winbind"
 comment.ru = "Проверка наличия мета-пакета и его версии для аутентификации c помощью winbind - check_sssd_winbind_packages"
 comment.en = "description check_sssd_winbind_packages"
