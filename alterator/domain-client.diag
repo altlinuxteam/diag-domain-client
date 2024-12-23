@@ -5,7 +5,7 @@ display_name.en = "Diagnosis of client status as part of a domain"
 comment.ru = "Диагностика состояния клиента в составе домена"
 comment.en = "Diagnostic of client state in the domain"
 icon = "diag-domain-client"
-reportSuffix = "txt"
+report_suffix = "txt"
 
 [tests.check_hostnamectl]
 display_name.ru = "Информация о настройках хоста"
